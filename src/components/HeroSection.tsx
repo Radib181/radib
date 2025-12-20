@@ -50,7 +50,9 @@ const HeroSection = () => {
 
           {/* Sub-headline */}
           <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-fade-in-up animation-delay-200">
-            AI Automation Expert helping businesses save time, reduce costs, and scale faster through intelligent workflow automation.
+            <span className="text-foreground font-medium">AI Automation Expert & Entrepreneur</span>
+            <br />
+            We build systems that make businesses run on autopilot.
           </p>
 
           {/* CTA Buttons */}
