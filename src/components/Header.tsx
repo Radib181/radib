@@ -17,8 +17,15 @@ const Header = () => {
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16 sm:h-20">
-          <a href="#" className="text-xl sm:text-2xl font-bold text-gradient">
-            Radib Bhuyian
+          <a href="#" className="flex items-center gap-3 group">
+            {/* Colorful Logo */}
+            <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary via-cyan-400 to-blue-500 flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+              <span className="text-lg font-bold text-background">R</span>
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary via-cyan-400 to-blue-500 opacity-50 blur-md -z-10 group-hover:opacity-80 transition-opacity" />
+            </div>
+            <span className="text-xl sm:text-2xl font-bold text-gradient">
+              Radib Bhuyian
+            </span>
           </a>
 
           {/* Desktop Navigation */}
