@@ -1,6 +1,7 @@
 import newsletterAgent from "@/assets/projects/newsletter-agent.png";
 import messengerAgent from "@/assets/projects/messenger-agent.jpg";
 import emailScraper from "@/assets/projects/email-scraper.jpg";
+import smartOutreachAi from "@/assets/projects/smart-outreach-ai.png";
 
 export interface Project {
   id: string;
@@ -17,6 +18,26 @@ export interface Project {
 }
 
 export const projects: Project[] = [
+  {
+    id: "smart-outreach-ai",
+    title: "Smart Outreach AI – Personalized DM Automation",
+    shortDescription: "AI automation for email validation, LinkedIn research, and personalized DM generation",
+    thumbnail: smartOutreachAi,
+    badge: "New",
+    problem: "Most outreach feels robotic and impersonal. Businesses waste time sending messages to invalid emails and using generic copy-paste templates that get ignored. Manual research on each prospect is time-consuming and inconsistent.",
+    solution: "Built a smart AI automation that first validates emails to ensure no time is wasted on fake contacts. Then it researches each prospect's LinkedIn profile and recent posts to understand who they are. Based on that real information, it generates personalized DMs that feel natural and relevant—not copied, not robotic.",
+    tools: ["n8n", "Apify", "Google Gemini AI", "Email Validation API", "Google Sheets", "LinkedIn Scraper"],
+    automationFlow: "Email Input → Email Validation → LinkedIn Profile Research → Post Analysis → AI Personalization → DM Generation → Ready for Outreach",
+    impact: "No more wasted time on invalid emails. Every message is personalized based on real prospect data. Higher response rates through authentic, relevant outreach. Zero copy-paste, zero generic templates.",
+    features: [
+      "Email validation",
+      "LinkedIn profile + post research",
+      "Personalized DM generation (not spammy)",
+      "AI-powered personalization",
+      "Automated prospect research",
+      "Ready-to-send messages"
+    ]
+  },
   {
     id: "ai-newsletter-agent",
     title: "AI Newsletter Agent (Topic-Based News)",
