@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useState, Suspense, lazy } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Mail, Calendar, Send, MapPin, Clock, CheckCircle2, Phone } from "lucide-react";
+import { Send, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+
+// Lazy load the 3D component for performance
+const Contact3DLazy = lazy(() => import('./Contact3D'));
 
 const ContactSection = () => {
   const { toast } = useToast();
@@ -44,161 +47,139 @@ const ContactSection = () => {
     }
   };
 
-  const benefits = [
-    "Free initial consultation",
-    "Custom automation strategy",
-    "Quick response time",
-    "100% satisfaction guarantee"
-  ];
-
   return (
     <section id="contact" className="py-24 sm:py-32 relative overflow-hidden">
-      {/* Background effects */}
-      <div className="absolute inset-0 bg-gradient-glow opacity-20" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+      {/* Starfield background */}
+      <div className="absolute inset-0">
+        {[...Array(50)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-px h-px bg-white rounded-full animate-pulse"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              opacity: Math.random() * 0.5 + 0.2,
+              animationDelay: `${Math.random() * 3}s`,
+              animationDuration: `${2 + Math.random() * 2}s`
+            }}
+          />
+        ))}
+      </div>
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
-        <div className="max-w-5xl mx-auto">
-          {/* Section Header */}
-          <div className="text-center mb-16">
-            <span className="text-primary font-medium text-sm uppercase tracking-wider mb-4 block animate-fade-in-up">
-              Get In Touch
-            </span>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 animate-fade-in-up animation-delay-100">
-              Let's <span className="text-gradient">Automate</span> Your Business
-            </h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto animate-fade-in-up animation-delay-200">
-              Ready to save time and scale faster? Let's discuss how AI automation can transform your operations.
-            </p>
-          </div>
+        <div className="max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+            {/* Left Side - Form */}
+            <div className="order-2 lg:order-1">
+              {/* Bold Heading */}
+              <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-12 animate-fade-in-up">
+                Contact<span className="text-primary">.</span>
+              </h2>
 
-          <div className="grid lg:grid-cols-5 gap-12">
-            {/* Contact Info */}
-            <div className="lg:col-span-2 space-y-8">
-              <div className="animate-fade-in-up">
-                <h3 className="text-xl font-semibold mb-4">Ready to get started?</h3>
-                <p className="text-muted-foreground leading-relaxed mb-6">
-                  Whether you have a specific automation project in mind or just want to explore the possibilities, 
-                  I'd love to hear from you. Every great automation starts with a conversation.
-                </p>
-
-                {/* Benefits list */}
-                <ul className="space-y-3 mb-8">
-                  {benefits.map((benefit, i) => (
-                    <li key={i} className="flex items-center gap-3 text-muted-foreground">
-                      <CheckCircle2 className="w-5 h-5 text-primary" />
-                      {benefit}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="space-y-4 animate-fade-in-up animation-delay-100">
-                <a
-                  href="mailto:radibeshan@gmail.com"
-                  className="flex items-center gap-4 p-5 rounded-xl bg-card/80 backdrop-blur-sm border border-border hover:border-primary/50 transition-all duration-500 group hover:shadow-glow hover:-translate-y-1"
-                >
-                  <div className="w-14 h-14 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
-                    <Mail className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Email me at</p>
-                    <p className="font-medium group-hover:text-primary transition-colors">radibeshan@gmail.com</p>
-                  </div>
-                </a>
-
-                <a
-                  href="tel:+8801842437899"
-                  className="flex items-center gap-4 p-5 rounded-xl bg-card/80 backdrop-blur-sm border border-border hover:border-primary/50 transition-all duration-500 group hover:shadow-glow hover:-translate-y-1"
-                >
-                  <div className="w-14 h-14 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
-                    <Phone className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Call me at</p>
-                    <p className="font-medium group-hover:text-primary transition-colors">01842437899</p>
-                  </div>
-                </a>
-
-                <a
-                  href="#"
-                  className="flex items-center gap-4 p-5 rounded-xl bg-card/80 backdrop-blur-sm border border-border hover:border-primary/50 transition-all duration-500 group hover:shadow-glow hover:-translate-y-1"
-                >
-                  <div className="w-14 h-14 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
-                    <Calendar className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Book a free call</p>
-                    <p className="font-medium group-hover:text-primary transition-colors">Schedule on Calendly</p>
-                  </div>
-                </a>
-
-                <div className="flex items-center gap-4 p-5 rounded-xl bg-card/80 backdrop-blur-sm border border-border">
-                  <div className="w-14 h-14 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
-                    <Clock className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Response time</p>
-                    <p className="font-medium">Within 24 hours</p>
-                  </div>
+              {/* Contact Form */}
+              <form onSubmit={handleSubmit} className="space-y-8 animate-fade-in-up animation-delay-100">
+                {/* Name Field */}
+                <div className="space-y-3">
+                  <label className="block text-sm font-semibold text-foreground tracking-wide">
+                    Your Name
+                  </label>
+                  <Input
+                    placeholder="What's your good name?"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    required
+                    className="bg-secondary/80 border-0 h-14 text-base placeholder:text-muted-foreground/60 focus:ring-2 focus:ring-primary/50 transition-all duration-300 rounded-lg"
+                  />
                 </div>
-              </div>
-            </div>
 
-            {/* Contact Form */}
-            <div className="lg:col-span-3 animate-fade-in-up animation-delay-200">
-              <form onSubmit={handleSubmit} className="p-8 rounded-2xl bg-card/80 backdrop-blur-sm border border-border space-y-6">
-                <div className="grid sm:grid-cols-2 gap-6">
-                  <div className="group">
-                    <label className="block text-sm font-medium mb-2 group-focus-within:text-primary transition-colors">
-                      Your Name
-                    </label>
-                    <Input
-                      placeholder="John Doe"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      required
-                      className="bg-secondary border-border h-12 focus:border-primary transition-all duration-300"
-                    />
-                  </div>
-                  <div className="group">
-                    <label className="block text-sm font-medium mb-2 group-focus-within:text-primary transition-colors">
-                      Your Email
-                    </label>
-                    <Input
-                      type="email"
-                      placeholder="john@example.com"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      required
-                      className="bg-secondary border-border h-12 focus:border-primary transition-all duration-300"
-                    />
-                  </div>
+                {/* Email Field */}
+                <div className="space-y-3">
+                  <label className="block text-sm font-semibold text-foreground tracking-wide">
+                    Your Email
+                  </label>
+                  <Input
+                    type="email"
+                    placeholder="What's your web address?"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    required
+                    className="bg-secondary/80 border-0 h-14 text-base placeholder:text-muted-foreground/60 focus:ring-2 focus:ring-primary/50 transition-all duration-300 rounded-lg"
+                  />
                 </div>
-                <div className="group">
-                  <label className="block text-sm font-medium mb-2 group-focus-within:text-primary transition-colors">
-                    Tell me about your automation needs
+
+                {/* Message Field */}
+                <div className="space-y-3">
+                  <label className="block text-sm font-semibold text-foreground tracking-wide">
+                    Your Message
                   </label>
                   <Textarea
-                    placeholder="Describe your project, challenges, or questions..."
+                    placeholder="What you want to say?"
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     required
-                    rows={6}
-                    className="bg-secondary border-border resize-none focus:border-primary transition-all duration-300"
+                    rows={5}
+                    className="bg-secondary/80 border-0 text-base placeholder:text-muted-foreground/60 focus:ring-2 focus:ring-primary/50 transition-all duration-300 rounded-lg resize-none"
                   />
                 </div>
+
+                {/* Submit Button */}
                 <Button 
                   type="submit" 
                   variant="hero" 
                   size="lg" 
-                  className="w-full group" 
+                  className="w-full sm:w-auto px-10 group" 
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? "Sending..." : "Send Message"}
-                  <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      Send Message
+                      <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
+                    </>
+                  )}
                 </Button>
               </form>
+
+              {/* Contact Info */}
+              <div className="mt-12 pt-8 border-t border-border/30 animate-fade-in-up animation-delay-200">
+                <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
+                  <a 
+                    href="mailto:radibeshan@gmail.com" 
+                    className="hover:text-primary transition-colors duration-300"
+                  >
+                    radibeshan@gmail.com
+                  </a>
+                  <span className="text-border">•</span>
+                  <a 
+                    href="tel:+8801842437899" 
+                    className="hover:text-primary transition-colors duration-300"
+                  >
+                    01842437899
+                  </a>
+                  <span className="text-border">•</span>
+                  <span>Response within 24h</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Side - 3D Animation */}
+            <div className="order-1 lg:order-2 h-[400px] lg:h-[600px] relative">
+              <Suspense fallback={
+                <div className="w-full h-full flex items-center justify-center">
+                  <div className="w-32 h-32 rounded-full border-2 border-primary/30 border-t-primary animate-spin" />
+                </div>
+              }>
+                <Contact3DLazy />
+              </Suspense>
+              
+              {/* Glow effect behind sphere */}
+              <div className="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none">
+                <div className="w-64 h-64 bg-primary/10 rounded-full blur-[100px] animate-pulse-slow" />
+              </div>
             </div>
           </div>
         </div>
