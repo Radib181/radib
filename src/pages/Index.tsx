@@ -11,12 +11,10 @@ import WhyMeSection from "@/components/WhyMeSection";
 import CTASection from "@/components/CTASection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
-import Background3D from "@/components/Background3D";
 
 const Index = () => {
   return (
-    <div className="min-h-screen relative">
-      <Background3D />
+    <div className="min-h-screen bg-background relative">
       <Header />
       <main>
         <HeroSection />
