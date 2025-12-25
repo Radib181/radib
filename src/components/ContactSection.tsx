@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Mail, Calendar, Send, MapPin, Clock, CheckCircle2 } from "lucide-react";
+import { Mail, Calendar, Send, MapPin, Clock, CheckCircle2, Phone } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 const ContactSection = () => {
@@ -104,6 +104,19 @@ const ContactSection = () => {
                   <div>
                     <p className="text-sm text-muted-foreground">Email me at</p>
                     <p className="font-medium group-hover:text-primary transition-colors">radibeshan@gmail.com</p>
+                  </div>
+                </a>
+
+                <a
+                  href="tel:+8801842437899"
+                  className="flex items-center gap-4 p-5 rounded-xl bg-card/80 backdrop-blur-sm border border-border hover:border-primary/50 transition-all duration-500 group hover:shadow-glow hover:-translate-y-1"
+                >
+                  <div className="w-14 h-14 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
+                    <Phone className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Call me at</p>
+                    <p className="font-medium group-hover:text-primary transition-colors">01842437899</p>
                   </div>
                 </a>
 
