@@ -15,7 +15,7 @@ import Background3D from "@/components/Background3D";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background relative">
+    <div className="min-h-screen relative">
       <Background3D />
       <Header />
       <main>

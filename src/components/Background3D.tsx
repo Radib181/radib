@@ -148,11 +148,11 @@ function DottedSphere({
 
 function FloatingSpheres({ mouse }: { mouse: MousePosition }) {
   const spheresConfig = useMemo(() => [
-    { position: [3.2, -1.8, -1] as [number, number, number], radius: 2.2, parallaxStrength: 0.6, ringTilt: Math.PI / 2.2 },
-    { position: [-2.8, 1.2, -3] as [number, number, number], radius: 1.6, parallaxStrength: 1.0, ringTilt: Math.PI / 2.5 },
-    { position: [0.8, 3, -5] as [number, number, number], radius: 1.1, parallaxStrength: 1.3, ringTilt: Math.PI / 2.8 },
-    { position: [-4.5, -2.5, -2] as [number, number, number], radius: 0.8, parallaxStrength: 1.6, ringTilt: Math.PI / 2.3 },
-    { position: [5.5, 2.5, -7] as [number, number, number], radius: 0.55, parallaxStrength: 1.9, ringTilt: Math.PI / 2.6 },
+    { position: [2.5, -1, 0] as [number, number, number], radius: 1.8, parallaxStrength: 0.6, ringTilt: Math.PI / 2.2 },
+    { position: [-2.2, 1.5, -2] as [number, number, number], radius: 1.4, parallaxStrength: 1.0, ringTilt: Math.PI / 2.5 },
+    { position: [0.5, 2.5, -4] as [number, number, number], radius: 1.0, parallaxStrength: 1.3, ringTilt: Math.PI / 2.8 },
+    { position: [-3.5, -2, -1] as [number, number, number], radius: 0.7, parallaxStrength: 1.6, ringTilt: Math.PI / 2.3 },
+    { position: [4, 1.5, -5] as [number, number, number], radius: 0.5, parallaxStrength: 1.9, ringTilt: Math.PI / 2.6 },
   ], []);
 
   return (
@@ -226,12 +226,12 @@ function Scene({ mouse }: { mouse: MousePosition }) {
 
   return (
     <>
-      <ambientLight intensity={0.08} />
-      <directionalLight position={[10, 10, 5]} intensity={0.25} color="#ffffff" />
-      <directionalLight position={[-10, -10, -5]} intensity={0.15} color="#ff7a1a" />
+      <ambientLight intensity={0.15} />
+      <directionalLight position={[10, 10, 5]} intensity={0.4} color="#ffffff" />
+      <directionalLight position={[-10, -10, -5]} intensity={0.25} color="#ff7a1a" />
       <FloatingSpheres mouse={mouse} />
       <AmbientParticles mouse={mouse} />
-      <fog attach="fog" args={['#050510', 6, 28]} />
+      <fog attach="fog" args={['#050510', 10, 35]} />
     </>
   );
 }
