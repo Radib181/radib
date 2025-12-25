@@ -52,7 +52,7 @@ const ContactSection = () => {
   ];
 
   return (
-    <section id="contact" className="py-24 sm:py-32 bg-secondary/30 relative overflow-hidden">
+    <section id="contact" className="py-24 sm:py-32 relative overflow-hidden">
       {/* Background effects */}
       <div className="absolute inset-0 bg-gradient-glow opacity-20" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />

@@ -110,9 +110,9 @@ const StatsSection = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-24 sm:py-32 bg-secondary/30 relative overflow-hidden">
+    <section ref={sectionRef} className="py-24 sm:py-32 relative overflow-hidden">
       {/* Background pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border)/0.2)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.2)_1px,transparent_1px)] bg-[size:80px_80px]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border)/0.12)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.12)_1px,transparent_1px)] bg-[size:80px_80px]" />
       
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <div className="max-w-6xl mx-auto">

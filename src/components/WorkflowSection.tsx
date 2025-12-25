@@ -29,9 +29,9 @@ const workflowSteps = [
 
 const WorkflowSection = () => {
   return (
-    <section className="py-24 sm:py-32 bg-secondary/30 relative overflow-hidden">
+    <section className="py-24 sm:py-32 relative overflow-hidden">
       {/* Background Pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border)/0.2)_1px,transparent_1px)] bg-[size:100px_100px]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border)/0.12)_1px,transparent_1px)] bg-[size:100px_100px]" />
       <div className="absolute top-1/2 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2" />
       <div className="absolute top-1/2 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2" />
       
