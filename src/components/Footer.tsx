@@ -1,4 +1,4 @@
-import { Linkedin, Facebook, Mail, ArrowUpRight } from "lucide-react";
+import { Linkedin, Facebook, Mail, ArrowUpRight, Phone } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -87,6 +87,14 @@ const Footer = () => {
                     className="text-muted-foreground hover:text-primary transition-colors duration-300"
                   >
                     radibeshan@gmail.com
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    href="tel:+8801842437899"
+                    className="text-muted-foreground hover:text-primary transition-colors duration-300"
+                  >
+                    01842437899
                   </a>
                 </li>
                 <li className="text-muted-foreground">
