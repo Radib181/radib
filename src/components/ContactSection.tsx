@@ -1,13 +1,10 @@
-import { useState, Suspense, lazy } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Send, Loader2 } from "lucide-react";
+import { Send, Loader2, Mail, Phone, MapPin } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-
-// Lazy load the 3D component for performance
-const Contact3DLazy = lazy(() => import('./Contact3D'));
 
 const ContactSection = () => {
   const { toast } = useToast();
@@ -48,86 +45,109 @@ const ContactSection = () => {
   };
 
   return (
-    <section id="contact" className="py-24 sm:py-32 relative overflow-hidden">
-      {/* Starfield background */}
-      <div className="absolute inset-0">
-        {[...Array(50)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-px h-px bg-white rounded-full animate-pulse"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              opacity: Math.random() * 0.5 + 0.2,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${2 + Math.random() * 2}s`
-            }}
-          />
-        ))}
-      </div>
+    <section id="contact" className="py-24 sm:py-32 bg-secondary/30">
+      <div className="container mx-auto px-4 sm:px-6">
+        <div className="max-w-4xl mx-auto">
+          {/* Section Header */}
+          <div className="text-center mb-16 animate-fade-in-up">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+              Let's Work <span className="text-gradient">Together</span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Ready to automate your business? Get in touch and let's discuss how I can help you save time and scale efficiently.
+            </p>
+          </div>
 
-      <div className="container mx-auto px-4 sm:px-6 relative z-10">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
-            {/* Left Side - Form */}
-            <div className="order-2 lg:order-1">
-              {/* Bold Heading */}
-              <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-12 animate-fade-in-up">
-                Contact<span className="text-primary">.</span>
-              </h2>
-
-              {/* Contact Form */}
-              <form onSubmit={handleSubmit} className="space-y-8 animate-fade-in-up animation-delay-100">
-                {/* Name Field */}
-                <div className="space-y-3">
-                  <label className="block text-sm font-semibold text-foreground tracking-wide">
-                    Your Name
-                  </label>
-                  <Input
-                    placeholder="What's your good name?"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    required
-                    className="bg-secondary/80 border-0 h-14 text-base placeholder:text-muted-foreground/60 focus:ring-2 focus:ring-primary/50 transition-all duration-300 rounded-lg"
-                  />
+          <div className="grid lg:grid-cols-5 gap-12">
+            {/* Contact Info */}
+            <div className="lg:col-span-2 space-y-8 animate-fade-in-up animation-delay-100">
+              <div className="space-y-6">
+                <div className="flex items-start gap-4 group">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <Mail className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold mb-1">Email</h3>
+                    <a href="mailto:radibeshan@gmail.com" className="text-muted-foreground hover:text-primary transition-colors">
+                      radibeshan@gmail.com
+                    </a>
+                  </div>
                 </div>
 
-                {/* Email Field */}
-                <div className="space-y-3">
-                  <label className="block text-sm font-semibold text-foreground tracking-wide">
-                    Your Email
-                  </label>
-                  <Input
-                    type="email"
-                    placeholder="What's your web address?"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    required
-                    className="bg-secondary/80 border-0 h-14 text-base placeholder:text-muted-foreground/60 focus:ring-2 focus:ring-primary/50 transition-all duration-300 rounded-lg"
-                  />
+                <div className="flex items-start gap-4 group">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <Phone className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold mb-1">Phone</h3>
+                    <a href="tel:+8801842437899" className="text-muted-foreground hover:text-primary transition-colors">
+                      +880 1842 437899
+                    </a>
+                  </div>
                 </div>
 
-                {/* Message Field */}
-                <div className="space-y-3">
-                  <label className="block text-sm font-semibold text-foreground tracking-wide">
-                    Your Message
-                  </label>
+                <div className="flex items-start gap-4 group">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <MapPin className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold mb-1">Location</h3>
+                    <p className="text-muted-foreground">Bangladesh</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6 rounded-2xl bg-card border border-border">
+                <p className="text-sm text-muted-foreground">
+                  <span className="text-primary font-semibold">Response time:</span> I typically respond within 24 hours. For urgent matters, feel free to call directly.
+                </p>
+              </div>
+            </div>
+
+            {/* Contact Form */}
+            <div className="lg:col-span-3 animate-fade-in-up animation-delay-200">
+              <form onSubmit={handleSubmit} className="space-y-6 p-8 rounded-2xl bg-card border border-border">
+                <div className="grid sm:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Name</label>
+                    <Input
+                      placeholder="Your name"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      required
+                      className="bg-background"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Email</label>
+                    <Input
+                      type="email"
+                      placeholder="your@email.com"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      required
+                      className="bg-background"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Message</label>
                   <Textarea
-                    placeholder="What you want to say?"
+                    placeholder="Tell me about your project..."
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     required
                     rows={5}
-                    className="bg-secondary/80 border-0 text-base placeholder:text-muted-foreground/60 focus:ring-2 focus:ring-primary/50 transition-all duration-300 rounded-lg resize-none"
+                    className="bg-background resize-none"
                   />
                 </div>
 
-                {/* Submit Button */}
                 <Button 
                   type="submit" 
                   variant="hero" 
                   size="lg" 
-                  className="w-full sm:w-auto px-10 group" 
+                  className="w-full group" 
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
@@ -143,43 +163,6 @@ const ContactSection = () => {
                   )}
                 </Button>
               </form>
-
-              {/* Contact Info */}
-              <div className="mt-12 pt-8 border-t border-border/30 animate-fade-in-up animation-delay-200">
-                <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
-                  <a 
-                    href="mailto:radibeshan@gmail.com" 
-                    className="hover:text-primary transition-colors duration-300"
-                  >
-                    radibeshan@gmail.com
-                  </a>
-                  <span className="text-border">•</span>
-                  <a 
-                    href="tel:+8801842437899" 
-                    className="hover:text-primary transition-colors duration-300"
-                  >
-                    01842437899
-                  </a>
-                  <span className="text-border">•</span>
-                  <span>Response within 24h</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Side - 3D Animation */}
-            <div className="order-1 lg:order-2 h-[400px] lg:h-[600px] relative">
-              <Suspense fallback={
-                <div className="w-full h-full flex items-center justify-center">
-                  <div className="w-32 h-32 rounded-full border-2 border-primary/30 border-t-primary animate-spin" />
-                </div>
-              }>
-                <Contact3DLazy />
-              </Suspense>
-              
-              {/* Glow effect behind sphere */}
-              <div className="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none">
-                <div className="w-64 h-64 bg-primary/10 rounded-full blur-[100px] animate-pulse-slow" />
-              </div>
             </div>
           </div>
         </div>
