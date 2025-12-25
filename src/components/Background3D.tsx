@@ -90,6 +90,15 @@ function DottedSphere({
     
     if (ringRef.current) {
       ringRef.current.rotation.z = state.clock.elapsedTime * 0.15;
+      
+      // Subtle pulsing animation
+      const pulse = Math.sin(state.clock.elapsedTime * 1.5 + position[0]) * 0.5 + 0.5;
+      const material = ringRef.current.material as THREE.MeshStandardMaterial;
+      material.emissiveIntensity = 2.5 + pulse * 1.5;
+      
+      // Subtle scale pulse
+      const scalePulse = 1 + Math.sin(state.clock.elapsedTime * 1.2 + position[1]) * 0.02;
+      ringRef.current.scale.setScalar(scalePulse);
     }
   });
 
