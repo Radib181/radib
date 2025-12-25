@@ -11,9 +11,10 @@ function DottedSphere({
   position, 
   radius, 
   ringColor = "#ff6b35",
-  dotColor = "#ff8c42",
+  dotColor = "#ff9500",
   mouse,
-  parallaxStrength = 1
+  parallaxStrength = 1,
+  ringTilt = Math.PI / 2.5
 }: { 
   position: [number, number, number]; 
   radius: number;
@@ -21,6 +22,7 @@ function DottedSphere({
   dotColor?: string;
   mouse: MousePosition;
   parallaxStrength?: number;
+  ringTilt?: number;
 }) {
   const groupRef = useRef<THREE.Group>(null);
   const sphereRef = useRef<THREE.Mesh>(null);
@@ -28,25 +30,39 @@ function DottedSphere({
   
   const dotTexture = useMemo(() => {
     const canvas = document.createElement('canvas');
-    canvas.width = 512;
-    canvas.height = 512;
+    canvas.width = 1024;
+    canvas.height = 1024;
     const ctx = canvas.getContext('2d')!;
     
-    ctx.fillStyle = '#0a0a12';
-    ctx.fillRect(0, 0, 512, 512);
+    // Dark sphere base
+    ctx.fillStyle = '#0a0a14';
+    ctx.fillRect(0, 0, 1024, 1024);
     
-    const dotSpacing = 16;
-    const dotRadius = 3;
+    const dotSpacing = 20;
+    const dotRadius = 4;
     
-    for (let x = dotSpacing / 2; x < 512; x += dotSpacing) {
-      for (let y = dotSpacing / 2; y < 512; y += dotSpacing) {
-        const gradient = ctx.createRadialGradient(x, y, 0, x, y, dotRadius * 2);
-        gradient.addColorStop(0, dotColor);
-        gradient.addColorStop(0.5, dotColor);
-        gradient.addColorStop(1, 'transparent');
-        ctx.fillStyle = gradient;
+    // Create glowing dots pattern
+    for (let x = dotSpacing / 2; x < 1024; x += dotSpacing) {
+      for (let y = dotSpacing / 2; y < 1024; y += dotSpacing) {
+        // Outer glow
+        const glowGradient = ctx.createRadialGradient(x, y, 0, x, y, dotRadius * 3);
+        glowGradient.addColorStop(0, dotColor);
+        glowGradient.addColorStop(0.3, `${dotColor}aa`);
+        glowGradient.addColorStop(0.6, `${dotColor}44`);
+        glowGradient.addColorStop(1, 'transparent');
+        ctx.fillStyle = glowGradient;
         ctx.beginPath();
-        ctx.arc(x, y, dotRadius * 2, 0, Math.PI * 2);
+        ctx.arc(x, y, dotRadius * 3, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Bright center
+        const centerGradient = ctx.createRadialGradient(x, y, 0, x, y, dotRadius);
+        centerGradient.addColorStop(0, '#ffffff');
+        centerGradient.addColorStop(0.4, dotColor);
+        centerGradient.addColorStop(1, `${dotColor}88`);
+        ctx.fillStyle = centerGradient;
+        ctx.beginPath();
+        ctx.arc(x, y, dotRadius, 0, Math.PI * 2);
         ctx.fill();
       }
     }
@@ -54,67 +70,80 @@ function DottedSphere({
     const texture = new THREE.CanvasTexture(canvas);
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(4, 2);
+    texture.repeat.set(6, 3);
     return texture;
   }, [dotColor]);
 
   useFrame((state) => {
     if (groupRef.current) {
-      const targetX = position[0] + mouse.x * 0.5 * parallaxStrength;
-      const targetY = position[1] + mouse.y * 0.3 * parallaxStrength;
-      const targetZ = position[2] + mouse.x * 0.2 * parallaxStrength;
+      const targetX = position[0] + mouse.x * 0.4 * parallaxStrength;
+      const targetY = position[1] + mouse.y * 0.25 * parallaxStrength;
+      const targetZ = position[2] + mouse.x * 0.15 * parallaxStrength;
       
-      groupRef.current.position.x += (targetX - groupRef.current.position.x) * 0.02;
-      groupRef.current.position.y += (targetY - groupRef.current.position.y) * 0.02;
-      groupRef.current.position.z += (targetZ - groupRef.current.position.z) * 0.02;
+      groupRef.current.position.x += (targetX - groupRef.current.position.x) * 0.015;
+      groupRef.current.position.y += (targetY - groupRef.current.position.y) * 0.015;
+      groupRef.current.position.z += (targetZ - groupRef.current.position.z) * 0.015;
       
-      groupRef.current.rotation.x += (mouse.y * 0.2 - groupRef.current.rotation.x) * 0.01;
-      groupRef.current.rotation.y += 0.003;
+      groupRef.current.rotation.x += (mouse.y * 0.15 - groupRef.current.rotation.x) * 0.008;
+      groupRef.current.rotation.y += 0.002;
     }
     
     if (ringRef.current) {
-      ringRef.current.rotation.z = state.clock.elapsedTime * 0.2;
+      ringRef.current.rotation.z = state.clock.elapsedTime * 0.15;
     }
   });
 
   return (
     <group ref={groupRef} position={position}>
+      {/* Main sphere with dotted texture */}
       <mesh ref={sphereRef}>
         <sphereGeometry args={[radius, 64, 64]} />
         <meshStandardMaterial
           map={dotTexture}
           emissive={dotColor}
-          emissiveIntensity={0.15}
-          roughness={0.8}
-          metalness={0.2}
+          emissiveIntensity={0.3}
+          roughness={0.7}
+          metalness={0.3}
         />
       </mesh>
       
-      <mesh ref={ringRef} rotation={[Math.PI / 2.5, 0, 0]}>
-        <torusGeometry args={[radius * 1.1, radius * 0.08, 32, 100]} />
+      {/* Glowing ring - thick and prominent */}
+      <mesh ref={ringRef} rotation={[ringTilt, 0, 0]}>
+        <torusGeometry args={[radius * 1.05, radius * 0.12, 32, 100]} />
         <meshStandardMaterial
           color={ringColor}
           emissive={ringColor}
-          emissiveIntensity={2}
-          roughness={0.2}
-          metalness={0.9}
+          emissiveIntensity={3}
+          roughness={0.1}
+          metalness={0.95}
           transparent
-          opacity={0.95}
+          opacity={0.98}
         />
       </mesh>
       
-      <pointLight color={ringColor} intensity={2} distance={radius * 8} />
+      {/* Inner glow ring for extra luminosity */}
+      <mesh rotation={[ringTilt, 0, 0]}>
+        <torusGeometry args={[radius * 1.05, radius * 0.18, 16, 100]} />
+        <meshBasicMaterial
+          color={ringColor}
+          transparent
+          opacity={0.25}
+        />
+      </mesh>
+      
+      {/* Point light for ambient glow */}
+      <pointLight color={ringColor} intensity={3} distance={radius * 10} />
     </group>
   );
 }
 
 function FloatingSpheres({ mouse }: { mouse: MousePosition }) {
   const spheresConfig = useMemo(() => [
-    { position: [3.5, -1.5, -2] as [number, number, number], radius: 2, parallaxStrength: 0.8 },
-    { position: [-2.5, 1.5, -4] as [number, number, number], radius: 1.4, parallaxStrength: 1.2 },
-    { position: [0.5, 2.5, -6] as [number, number, number], radius: 1, parallaxStrength: 1.5 },
-    { position: [-4, -2, -3] as [number, number, number], radius: 0.7, parallaxStrength: 1.8 },
-    { position: [5, 3, -8] as [number, number, number], radius: 0.5, parallaxStrength: 2 },
+    { position: [3.2, -1.8, -1] as [number, number, number], radius: 2.2, parallaxStrength: 0.6, ringTilt: Math.PI / 2.2 },
+    { position: [-2.8, 1.2, -3] as [number, number, number], radius: 1.6, parallaxStrength: 1.0, ringTilt: Math.PI / 2.5 },
+    { position: [0.8, 3, -5] as [number, number, number], radius: 1.1, parallaxStrength: 1.3, ringTilt: Math.PI / 2.8 },
+    { position: [-4.5, -2.5, -2] as [number, number, number], radius: 0.8, parallaxStrength: 1.6, ringTilt: Math.PI / 2.3 },
+    { position: [5.5, 2.5, -7] as [number, number, number], radius: 0.55, parallaxStrength: 1.9, ringTilt: Math.PI / 2.6 },
   ], []);
 
   return (
@@ -126,8 +155,9 @@ function FloatingSpheres({ mouse }: { mouse: MousePosition }) {
           radius={config.radius}
           mouse={mouse}
           parallaxStrength={config.parallaxStrength}
-          ringColor="#ff6b35"
-          dotColor="#ff8c42"
+          ringTilt={config.ringTilt}
+          ringColor="#ff7a1a"
+          dotColor="#ffaa33"
         />
       ))}
     </>
@@ -136,22 +166,22 @@ function FloatingSpheres({ mouse }: { mouse: MousePosition }) {
 
 function AmbientParticles({ mouse }: { mouse: MousePosition }) {
   const ref = useRef<THREE.Points>(null);
-  const particlesCount = 300;
+  const particlesCount = 200;
   
   const positions = useMemo(() => {
     const positions = new Float32Array(particlesCount * 3);
     for (let i = 0; i < particlesCount; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 30;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 20 - 5;
+      positions[i * 3] = (Math.random() - 0.5) * 35;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 25;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 25 - 5;
     }
     return positions;
   }, []);
 
   useFrame((state) => {
     if (ref.current) {
-      ref.current.rotation.y = state.clock.elapsedTime * 0.01 + mouse.x * 0.1;
-      ref.current.rotation.x = mouse.y * 0.05;
+      ref.current.rotation.y = state.clock.elapsedTime * 0.008 + mouse.x * 0.08;
+      ref.current.rotation.x = mouse.y * 0.04;
     }
   });
 
@@ -166,10 +196,10 @@ function AmbientParticles({ mouse }: { mouse: MousePosition }) {
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.03}
-        color="#ff6b35"
+        size={0.025}
+        color="#ff8833"
         transparent
-        opacity={0.4}
+        opacity={0.35}
         sizeAttenuation
       />
     </points>
@@ -180,19 +210,19 @@ function Scene({ mouse }: { mouse: MousePosition }) {
   const { camera } = useThree();
   
   useFrame(() => {
-    camera.position.x += (mouse.x * 0.5 - camera.position.x) * 0.02;
-    camera.position.y += (mouse.y * 0.3 - camera.position.y) * 0.02;
+    camera.position.x += (mouse.x * 0.4 - camera.position.x) * 0.015;
+    camera.position.y += (mouse.y * 0.25 - camera.position.y) * 0.015;
     camera.lookAt(0, 0, -3);
   });
 
   return (
     <>
-      <ambientLight intensity={0.1} />
-      <directionalLight position={[10, 10, 5]} intensity={0.3} color="#ffffff" />
-      <directionalLight position={[-10, -10, -5]} intensity={0.1} color="#ff6b35" />
+      <ambientLight intensity={0.08} />
+      <directionalLight position={[10, 10, 5]} intensity={0.25} color="#ffffff" />
+      <directionalLight position={[-10, -10, -5]} intensity={0.15} color="#ff7a1a" />
       <FloatingSpheres mouse={mouse} />
       <AmbientParticles mouse={mouse} />
-      <fog attach="fog" args={['#050510', 5, 25]} />
+      <fog attach="fog" args={['#050510', 6, 28]} />
     </>
   );
 }
