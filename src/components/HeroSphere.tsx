@@ -1,166 +1,167 @@
 import { useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Float, Stars, MeshDistortMaterial } from "@react-three/drei";
+import { Float, MeshTransmissionMaterial } from "@react-three/drei";
 import * as THREE from "three";
 
-const Globe = () => {
-  const globeRef = useRef<THREE.Group>(null);
-  const innerGlobeRef = useRef<THREE.Mesh>(null);
+const AbstractShape = () => {
+  const meshRef = useRef<THREE.Mesh>(null);
+  const wireframeRef = useRef<THREE.Mesh>(null);
+  const particlesRef = useRef<THREE.Points>(null);
+
+  // Create flowing particle positions
+  const particles = useMemo(() => {
+    const count = 500;
+    const positions = new Float32Array(count * 3);
+    const colors = new Float32Array(count * 3);
+    
+    for (let i = 0; i < count; i++) {
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      const r = 1.8 + Math.random() * 0.5;
+      
+      positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+      positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+      positions[i * 3 + 2] = r * Math.cos(phi);
+      
+      // Gradient colors from cyan to purple
+      const t = Math.random();
+      colors[i * 3] = 0.1 + t * 0.4;     // R
+      colors[i * 3 + 1] = 0.6 + t * 0.2; // G
+      colors[i * 3 + 2] = 0.8 + t * 0.2; // B
+    }
+    
+    return { positions, colors };
+  }, []);
 
   useFrame((state) => {
-    if (globeRef.current) {
-      globeRef.current.rotation.y = state.clock.elapsedTime * 0.1;
+    const t = state.clock.elapsedTime;
+    
+    if (meshRef.current) {
+      meshRef.current.rotation.x = t * 0.05;
+      meshRef.current.rotation.y = t * 0.08;
+      
+      // Morph the geometry
+      const positions = meshRef.current.geometry.attributes.position;
+      const original = meshRef.current.geometry.attributes.position.array;
+      
+      for (let i = 0; i < positions.count; i++) {
+        const x = original[i * 3];
+        const y = original[i * 3 + 1];
+        const z = original[i * 3 + 2];
+        
+        const noise = Math.sin(x * 2 + t) * Math.cos(y * 2 + t) * 0.1;
+        positions.setXYZ(
+          i,
+          x + noise * x * 0.1,
+          y + noise * y * 0.1,
+          z + noise * z * 0.1
+        );
+      }
+      positions.needsUpdate = true;
     }
-    if (innerGlobeRef.current) {
-      innerGlobeRef.current.rotation.y = state.clock.elapsedTime * 0.05;
+    
+    if (wireframeRef.current) {
+      wireframeRef.current.rotation.x = -t * 0.03;
+      wireframeRef.current.rotation.y = -t * 0.05;
+    }
+    
+    if (particlesRef.current) {
+      particlesRef.current.rotation.y = t * 0.02;
+      particlesRef.current.rotation.x = Math.sin(t * 0.1) * 0.1;
     }
   });
 
-  const ribbons = useMemo(() => {
-    return Array.from({ length: 12 }, (_, i) => ({
-      rotation: [
-        (Math.PI / 6) * i + Math.random() * 0.2,
-        (Math.PI / 4) * i,
-        Math.random() * 0.3
-      ] as [number, number, number],
-      color: i % 3 === 0 ? "#3b82f6" : i % 3 === 1 ? "#8b5cf6" : "#06b6d4",
-      arc: Math.PI * (1.2 + Math.random() * 0.6),
-      radius: 1.1 + (i % 3) * 0.05,
-      thickness: 0.025 + Math.random() * 0.015,
-    }));
-  }, []);
-
   return (
-    <group ref={globeRef}>
-      {/* Core dark sphere with reflections */}
-      <mesh ref={innerGlobeRef}>
-        <sphereGeometry args={[0.9, 128, 128]} />
-        <MeshDistortMaterial
-          color="#0c1222"
-          metalness={1}
-          roughness={0.1}
-          distort={0.1}
-          speed={2}
-        />
-      </mesh>
-
-      {/* Glass outer shell */}
-      <mesh>
-        <sphereGeometry args={[0.95, 64, 64]} />
-        <meshPhysicalMaterial
-          color="#1e3a5f"
-          metalness={0.2}
-          roughness={0}
-          transmission={0.6}
+    <group>
+      {/* Main glass-like icosahedron */}
+      <mesh ref={meshRef} scale={1.2}>
+        <icosahedronGeometry args={[1, 4]} />
+        <MeshTransmissionMaterial
+          backside
+          samples={16}
           thickness={0.5}
-          transparent
-          opacity={0.3}
+          chromaticAberration={0.2}
+          anisotropy={0.3}
+          distortion={0.5}
+          distortionScale={0.5}
+          temporalDistortion={0.1}
+          iridescence={1}
+          iridescenceIOR={1}
+          iridescenceThicknessRange={[0, 1400]}
+          color="#0ea5e9"
+          transmission={0.95}
+          roughness={0.1}
+          ior={1.5}
         />
       </mesh>
 
-      {/* Inner glow core */}
-      <mesh>
-        <sphereGeometry args={[0.5, 32, 32]} />
-        <meshBasicMaterial color="#22d3ee" transparent opacity={0.15} />
+      {/* Outer wireframe */}
+      <mesh ref={wireframeRef} scale={1.6}>
+        <icosahedronGeometry args={[1, 2]} />
+        <meshBasicMaterial
+          color="#22d3ee"
+          wireframe
+          transparent
+          opacity={0.15}
+        />
       </mesh>
 
-      {/* City lights texture simulation */}
-      <points>
-        <sphereGeometry args={[0.91, 64, 64]} />
+      {/* Inner glowing core */}
+      <mesh scale={0.4}>
+        <sphereGeometry args={[1, 32, 32]} />
+        <meshBasicMaterial color="#06b6d4" transparent opacity={0.6} />
+      </mesh>
+
+      {/* Orbital ring 1 */}
+      <mesh rotation={[Math.PI / 3, 0, 0]}>
+        <torusGeometry args={[1.8, 0.015, 16, 100]} />
+        <meshBasicMaterial color="#8b5cf6" transparent opacity={0.6} />
+      </mesh>
+
+      {/* Orbital ring 2 */}
+      <mesh rotation={[-Math.PI / 4, Math.PI / 4, 0]}>
+        <torusGeometry args={[2, 0.01, 16, 100]} />
+        <meshBasicMaterial color="#06b6d4" transparent opacity={0.4} />
+      </mesh>
+
+      {/* Floating particles */}
+      <points ref={particlesRef}>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            count={particles.positions.length / 3}
+            array={particles.positions}
+            itemSize={3}
+          />
+          <bufferAttribute
+            attach="attributes-color"
+            count={particles.colors.length / 3}
+            array={particles.colors}
+            itemSize={3}
+          />
+        </bufferGeometry>
         <pointsMaterial
-          color="#fbbf24"
-          size={0.008}
+          size={0.02}
+          vertexColors
           transparent
           opacity={0.8}
           sizeAttenuation
         />
       </points>
-
-      {/* Ribbon rings */}
-      {ribbons.map((ribbon, i) => (
-        <RibbonRing key={i} {...ribbon} index={i} />
-      ))}
-
-      {/* Atmosphere glow */}
-      <mesh scale={1.25}>
-        <sphereGeometry args={[1, 64, 64]} />
-        <meshBasicMaterial
-          color="#3b82f6"
-          transparent
-          opacity={0.05}
-          side={THREE.BackSide}
-        />
-      </mesh>
     </group>
-  );
-};
-
-const RibbonRing = ({
-  rotation,
-  color,
-  arc,
-  radius,
-  thickness,
-  index,
-}: {
-  rotation: [number, number, number];
-  color: string;
-  arc: number;
-  radius: number;
-  thickness: number;
-  index: number;
-}) => {
-  const meshRef = useRef<THREE.Mesh>(null);
-
-  useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.z = 
-        Math.sin(state.clock.elapsedTime * 0.3 + index) * 0.1;
-    }
-  });
-
-  return (
-    <mesh ref={meshRef} rotation={rotation}>
-      <torusGeometry args={[radius, thickness, 16, 100, arc]} />
-      <meshStandardMaterial
-        color={color}
-        metalness={0.6}
-        roughness={0.2}
-        emissive={color}
-        emissiveIntensity={0.4}
-      />
-    </mesh>
   );
 };
 
 const Scene = () => {
   return (
     <>
-      {/* Lighting setup for realism */}
-      <ambientLight intensity={0.2} />
-      <directionalLight position={[5, 5, 5]} intensity={1.5} color="#ffffff" />
-      <pointLight position={[-5, -5, 5]} intensity={0.8} color="#3b82f6" />
-      <pointLight position={[5, -5, -5]} intensity={0.5} color="#8b5cf6" />
-      <spotLight
-        position={[0, 10, 0]}
-        angle={0.3}
-        penumbra={1}
-        intensity={0.8}
-        color="#06b6d4"
-      />
-
-      <Stars
-        radius={80}
-        depth={60}
-        count={2000}
-        factor={3}
-        saturation={0.1}
-        fade
-        speed={0.5}
-      />
-
-      <Float speed={1.5} rotationIntensity={0.1} floatIntensity={0.3}>
-        <Globe />
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[10, 10, 5]} intensity={2} />
+      <pointLight position={[-10, -10, -10]} intensity={1} color="#8b5cf6" />
+      <pointLight position={[10, -10, 10]} intensity={0.5} color="#06b6d4" />
+      
+      <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.4}>
+        <AbstractShape />
       </Float>
     </>
   );
@@ -168,9 +169,9 @@ const Scene = () => {
 
 const HeroSphere = () => {
   return (
-    <div className="w-full h-[280px] lg:h-[350px]">
+    <div className="w-full h-[320px] lg:h-[420px]">
       <Canvas
-        camera={{ position: [0, 0, 3.5], fov: 45 }}
+        camera={{ position: [0, 0, 5], fov: 45 }}
         gl={{ antialias: true, alpha: true }}
         style={{ background: "transparent" }}
         dpr={[1, 2]}
