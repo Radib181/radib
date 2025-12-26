@@ -1,91 +1,40 @@
-import { ChevronDown } from "lucide-react";
 import heroPcSetup from "@/assets/hero-pc-setup.png";
 
 const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden pt-20">
-      {/* Animated Wave Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Wave SVG Pattern - Animated */}
-        <svg
-          className="absolute w-[200%] h-full opacity-30"
-          viewBox="0 0 1440 800"
-          preserveAspectRatio="none"
-          style={{ left: '-50%' }}
-        >
+      {/* Animated gradient background */}
+      <div className="absolute inset-0 bg-gradient-hero">
+        {/* Soft glowing orbs */}
+        <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[150px] animate-pulse-slow" />
+        <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-primary/8 rounded-full blur-[120px] animate-pulse-slow animation-delay-1000" />
+        
+        {/* Animated lines */}
+        <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
           <defs>
-            <linearGradient id="waveGradient1" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.6" />
-              <stop offset="50%" stopColor="hsl(var(--primary))" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0.6" />
-            </linearGradient>
-            <linearGradient id="waveGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.4" />
-              <stop offset="50%" stopColor="hsl(var(--primary))" stopOpacity="0.2" />
-              <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0.4" />
+            <linearGradient id="lineGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0" />
+              <stop offset="50%" stopColor="hsl(var(--primary))" stopOpacity="1" />
+              <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
             </linearGradient>
           </defs>
           
-          {/* Wave 1 - Slower, larger */}
-          <path
-            className="animate-wave-slow"
-            fill="none"
-            stroke="url(#waveGradient1)"
-            strokeWidth="2"
-            d="M0,400 Q180,300 360,400 T720,400 T1080,400 T1440,400 T1800,400 T2160,400 T2520,400 T2880,400"
-          />
-          
-          {/* Wave 2 - Medium speed */}
-          <path
-            className="animate-wave-medium"
-            fill="none"
-            stroke="url(#waveGradient2)"
-            strokeWidth="1.5"
-            d="M0,450 Q180,350 360,450 T720,450 T1080,450 T1440,450 T1800,450 T2160,450 T2520,450 T2880,450"
-          />
-          
-          {/* Wave 3 - Faster, smaller */}
-          <path
-            className="animate-wave-fast"
-            fill="none"
-            stroke="url(#waveGradient1)"
-            strokeWidth="1"
-            d="M0,500 Q180,420 360,500 T720,500 T1080,500 T1440,500 T1800,500 T2160,500 T2520,500 T2880,500"
-          />
+          {/* Horizontal flowing lines */}
+          <g className="animate-flow-lines">
+            <line x1="0" y1="200" x2="1920" y2="200" stroke="url(#lineGrad1)" strokeWidth="1" />
+            <line x1="0" y1="400" x2="1920" y2="400" stroke="url(#lineGrad1)" strokeWidth="0.5" />
+            <line x1="0" y1="600" x2="1920" y2="600" stroke="url(#lineGrad1)" strokeWidth="1" />
+            <line x1="0" y1="800" x2="1920" y2="800" stroke="url(#lineGrad1)" strokeWidth="0.5" />
+          </g>
         </svg>
-
-        {/* Concentric wave circles on the right */}
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[800px] h-[800px]">
-          {[...Array(8)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute inset-0 border border-primary/10 rounded-full animate-pulse-slow"
-              style={{
-                transform: `scale(${0.3 + i * 0.1})`,
-                animationDelay: `${i * 0.3}s`,
-                opacity: 1 - i * 0.1,
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Flowing lines from left */}
-        <svg className="absolute left-0 top-0 h-full w-32 opacity-40">
-          <path
-            className="animate-flow"
-            fill="none"
-            stroke="hsl(var(--primary))"
-            strokeWidth="2"
-            d="M20,0 Q40,200 20,400 T20,800"
-          />
-          <path
-            className="animate-flow animation-delay-200"
-            fill="none"
-            stroke="hsl(var(--primary))"
-            strokeWidth="1.5"
-            d="M40,0 Q60,200 40,400 T40,800"
-          />
-        </svg>
+        
+        {/* Grid pattern */}
+        <div className="absolute inset-0 opacity-[0.03]" 
+          style={{
+            backgroundImage: `linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)`,
+            backgroundSize: '100px 100px'
+          }}
+        />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
@@ -111,7 +60,7 @@ const HeroSection = () => {
             {/* Scroll indicator inline */}
             <div className="flex items-center gap-3 text-muted-foreground animate-fade-in-up animation-delay-200">
               <div className="w-6 h-10 border-2 border-muted-foreground/50 rounded-full flex items-start justify-center p-1">
-                <div className="w-1.5 h-3 bg-muted-foreground rounded-full animate-bounce" />
+                <div className="w-1.5 h-3 bg-primary rounded-full animate-scroll-indicator" />
               </div>
               <span className="text-sm">Scroll to explore</span>
             </div>
@@ -120,16 +69,24 @@ const HeroSection = () => {
           {/* PC Setup Image - Right Side */}
           <div className="relative animate-fade-in-up animation-delay-200">
             {/* Glow effect behind PC */}
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-transparent to-primary/10 blur-3xl scale-110" />
+            <div className="absolute inset-0 bg-gradient-radial from-primary/20 via-primary/5 to-transparent blur-3xl scale-125 animate-pulse-slow" />
             
-            <img
-              src={heroPcSetup}
-              alt="Professional development workstation setup"
-              className="relative z-10 w-full h-auto object-contain drop-shadow-2xl animate-float"
-            />
+            {/* Main PC image with floating animation */}
+            <div className="relative animate-float-smooth">
+              <img
+                src={heroPcSetup}
+                alt="Professional development workstation setup"
+                className="relative z-10 w-full h-auto object-contain drop-shadow-2xl"
+              />
+              
+              {/* Reflection glow under the setup */}
+              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-3/4 h-16 bg-primary/20 blur-2xl rounded-full animate-pulse-slow" />
+            </div>
             
-            {/* Reflection/glow under the setup */}
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-8 bg-primary/30 blur-xl rounded-full" />
+            {/* Floating accent elements */}
+            <div className="absolute top-10 right-10 w-3 h-3 bg-primary rounded-full animate-float-delayed opacity-60" />
+            <div className="absolute bottom-20 left-10 w-2 h-2 bg-primary/60 rounded-full animate-float opacity-40" />
+            <div className="absolute top-1/3 left-5 w-4 h-4 border border-primary/30 rounded-full animate-float-delayed" />
           </div>
         </div>
       </div>
