@@ -1,14 +1,20 @@
-import { useRef, useMemo } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { useRef, useMemo, useState, useEffect } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Float, MeshTransmissionMaterial } from "@react-three/drei";
 import * as THREE from "three";
 
-const AbstractShape = () => {
+interface MousePosition {
+  x: number;
+  y: number;
+}
+
+const AbstractShape = ({ mouse }: { mouse: MousePosition }) => {
+  const groupRef = useRef<THREE.Group>(null);
   const meshRef = useRef<THREE.Mesh>(null);
   const wireframeRef = useRef<THREE.Mesh>(null);
   const particlesRef = useRef<THREE.Points>(null);
+  const targetRotation = useRef({ x: 0, y: 0 });
 
-  // Create flowing particle positions
   const particles = useMemo(() => {
     const count = 500;
     const positions = new Float32Array(count * 3);
@@ -23,11 +29,10 @@ const AbstractShape = () => {
       positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
       positions[i * 3 + 2] = r * Math.cos(phi);
       
-      // Gradient colors from cyan to purple
       const t = Math.random();
-      colors[i * 3] = 0.1 + t * 0.4;     // R
-      colors[i * 3 + 1] = 0.6 + t * 0.2; // G
-      colors[i * 3 + 2] = 0.8 + t * 0.2; // B
+      colors[i * 3] = 0.1 + t * 0.4;
+      colors[i * 3 + 1] = 0.6 + t * 0.2;
+      colors[i * 3 + 2] = 0.8 + t * 0.2;
     }
     
     return { positions, colors };
@@ -36,11 +41,24 @@ const AbstractShape = () => {
   useFrame((state) => {
     const t = state.clock.elapsedTime;
     
+    // Smooth mouse following
+    targetRotation.current.x = mouse.y * 0.5;
+    targetRotation.current.y = mouse.x * 0.5;
+    
+    if (groupRef.current) {
+      groupRef.current.rotation.x = THREE.MathUtils.lerp(
+        groupRef.current.rotation.x,
+        targetRotation.current.x + t * 0.05,
+        0.05
+      );
+      groupRef.current.rotation.y = THREE.MathUtils.lerp(
+        groupRef.current.rotation.y,
+        targetRotation.current.y + t * 0.08,
+        0.05
+      );
+    }
+    
     if (meshRef.current) {
-      meshRef.current.rotation.x = t * 0.05;
-      meshRef.current.rotation.y = t * 0.08;
-      
-      // Morph the geometry
       const positions = meshRef.current.geometry.attributes.position;
       const original = meshRef.current.geometry.attributes.position.array;
       
@@ -66,13 +84,13 @@ const AbstractShape = () => {
     }
     
     if (particlesRef.current) {
-      particlesRef.current.rotation.y = t * 0.02;
-      particlesRef.current.rotation.x = Math.sin(t * 0.1) * 0.1;
+      particlesRef.current.rotation.y = t * 0.02 + mouse.x * 0.2;
+      particlesRef.current.rotation.x = Math.sin(t * 0.1) * 0.1 + mouse.y * 0.2;
     }
   });
 
   return (
-    <group>
+    <group ref={groupRef}>
       {/* Main glass-like icosahedron */}
       <mesh ref={meshRef} scale={1.2}>
         <icosahedronGeometry args={[1, 4]} />
@@ -152,7 +170,7 @@ const AbstractShape = () => {
   );
 };
 
-const Scene = () => {
+const Scene = ({ mouse }: { mouse: MousePosition }) => {
   return (
     <>
       <ambientLight intensity={0.5} />
@@ -160,23 +178,40 @@ const Scene = () => {
       <pointLight position={[-10, -10, -10]} intensity={1} color="#8b5cf6" />
       <pointLight position={[10, -10, 10]} intensity={0.5} color="#06b6d4" />
       
-      <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.4}>
-        <AbstractShape />
+      <Float speed={1.5} rotationIntensity={0.1} floatIntensity={0.3}>
+        <AbstractShape mouse={mouse} />
       </Float>
     </>
   );
 };
 
 const HeroSphere = () => {
+  const [mouse, setMouse] = useState<MousePosition>({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        const y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+        setMouse({ x, y });
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
   return (
-    <div className="w-full h-[320px] lg:h-[420px]">
+    <div ref={containerRef} className="w-full h-[320px] lg:h-[420px]">
       <Canvas
         camera={{ position: [0, 0, 5], fov: 45 }}
         gl={{ antialias: true, alpha: true }}
         style={{ background: "transparent" }}
         dpr={[1, 2]}
       >
-        <Scene />
+        <Scene mouse={mouse} />
       </Canvas>
     </div>
   );
