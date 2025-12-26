@@ -1,6 +1,6 @@
 import { useRef, useMemo, useState, useEffect } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Float, MeshTransmissionMaterial } from "@react-three/drei";
+import { Canvas, useFrame, useLoader } from "@react-three/fiber";
+import { Float, Stars } from "@react-three/drei";
 import * as THREE from "three";
 
 interface MousePosition {
@@ -8,164 +8,244 @@ interface MousePosition {
   y: number;
 }
 
-const AbstractShape = ({ mouse }: { mouse: MousePosition }) => {
-  const groupRef = useRef<THREE.Group>(null);
-  const meshRef = useRef<THREE.Mesh>(null);
-  const wireframeRef = useRef<THREE.Mesh>(null);
-  const particlesRef = useRef<THREE.Points>(null);
+const Earth = ({ mouse }: { mouse: MousePosition }) => {
+  const earthRef = useRef<THREE.Group>(null);
+  const cloudsRef = useRef<THREE.Mesh>(null);
+  const glowRef = useRef<THREE.Mesh>(null);
   const targetRotation = useRef({ x: 0, y: 0 });
 
-  const particles = useMemo(() => {
-    const count = 500;
-    const positions = new Float32Array(count * 3);
-    const colors = new Float32Array(count * 3);
+  // Create Earth texture using procedural generation
+  const earthTexture = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 1024;
+    canvas.height = 512;
+    const ctx = canvas.getContext("2d")!;
+
+    // Ocean base
+    const oceanGradient = ctx.createLinearGradient(0, 0, 0, 512);
+    oceanGradient.addColorStop(0, "#0c2d48");
+    oceanGradient.addColorStop(0.5, "#145374");
+    oceanGradient.addColorStop(1, "#0c2d48");
+    ctx.fillStyle = oceanGradient;
+    ctx.fillRect(0, 0, 1024, 512);
+
+    // Draw continents with realistic shapes
+    ctx.fillStyle = "#1a472a";
     
-    for (let i = 0; i < count; i++) {
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(2 * Math.random() - 1);
-      const r = 1.8 + Math.random() * 0.5;
-      
-      positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-      positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-      positions[i * 3 + 2] = r * Math.cos(phi);
-      
-      const t = Math.random();
-      colors[i * 3] = 0.1 + t * 0.4;
-      colors[i * 3 + 1] = 0.6 + t * 0.2;
-      colors[i * 3 + 2] = 0.8 + t * 0.2;
+    // North America
+    ctx.beginPath();
+    ctx.moveTo(150, 100);
+    ctx.bezierCurveTo(200, 80, 280, 90, 300, 120);
+    ctx.bezierCurveTo(320, 150, 310, 200, 280, 220);
+    ctx.bezierCurveTo(250, 250, 200, 260, 180, 240);
+    ctx.bezierCurveTo(140, 220, 120, 180, 130, 140);
+    ctx.bezierCurveTo(135, 115, 145, 105, 150, 100);
+    ctx.fill();
+
+    // South America
+    ctx.beginPath();
+    ctx.moveTo(280, 280);
+    ctx.bezierCurveTo(300, 270, 320, 290, 310, 340);
+    ctx.bezierCurveTo(300, 400, 280, 430, 260, 420);
+    ctx.bezierCurveTo(240, 410, 250, 350, 260, 310);
+    ctx.bezierCurveTo(265, 290, 275, 282, 280, 280);
+    ctx.fill();
+
+    // Europe
+    ctx.beginPath();
+    ctx.moveTo(480, 100);
+    ctx.bezierCurveTo(520, 90, 560, 100, 580, 130);
+    ctx.bezierCurveTo(590, 150, 570, 170, 540, 175);
+    ctx.bezierCurveTo(510, 180, 470, 170, 460, 145);
+    ctx.bezierCurveTo(455, 125, 465, 105, 480, 100);
+    ctx.fill();
+
+    // Africa
+    ctx.beginPath();
+    ctx.moveTo(500, 200);
+    ctx.bezierCurveTo(550, 190, 590, 210, 600, 260);
+    ctx.bezierCurveTo(610, 320, 590, 380, 560, 400);
+    ctx.bezierCurveTo(530, 415, 490, 400, 480, 350);
+    ctx.bezierCurveTo(470, 300, 475, 250, 490, 220);
+    ctx.bezierCurveTo(495, 205, 498, 202, 500, 200);
+    ctx.fill();
+
+    // Asia
+    ctx.beginPath();
+    ctx.moveTo(600, 100);
+    ctx.bezierCurveTo(700, 80, 820, 100, 880, 150);
+    ctx.bezierCurveTo(920, 190, 900, 250, 850, 280);
+    ctx.bezierCurveTo(780, 320, 700, 300, 650, 260);
+    ctx.bezierCurveTo(610, 230, 590, 180, 600, 140);
+    ctx.bezierCurveTo(605, 115, 598, 102, 600, 100);
+    ctx.fill();
+
+    // Australia
+    ctx.beginPath();
+    ctx.moveTo(820, 340);
+    ctx.bezierCurveTo(870, 330, 920, 350, 930, 390);
+    ctx.bezierCurveTo(935, 420, 910, 445, 870, 450);
+    ctx.bezierCurveTo(830, 455, 790, 435, 785, 400);
+    ctx.bezierCurveTo(780, 365, 800, 345, 820, 340);
+    ctx.fill();
+
+    // Add some terrain variation
+    ctx.fillStyle = "#2d5a3d";
+    for (let i = 0; i < 200; i++) {
+      const x = Math.random() * 1024;
+      const y = Math.random() * 512;
+      const r = Math.random() * 15 + 5;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
     }
-    
-    return { positions, colors };
+
+    // City lights
+    ctx.fillStyle = "#fbbf24";
+    const cityPositions = [
+      [180, 150], [200, 180], [260, 200], // NA
+      [280, 320], [270, 350], // SA
+      [500, 130], [530, 150], [550, 140], // Europe
+      [520, 250], [540, 280], [560, 320], // Africa
+      [700, 150], [750, 180], [800, 200], [850, 250], // Asia
+      [860, 380], [880, 400], // Australia
+    ];
+    cityPositions.forEach(([x, y]) => {
+      ctx.beginPath();
+      ctx.arc(x, y, 2, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.needsUpdate = true;
+    return texture;
+  }, []);
+
+  // Cloud texture
+  const cloudTexture = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 512;
+    canvas.height = 256;
+    const ctx = canvas.getContext("2d")!;
+
+    ctx.fillStyle = "transparent";
+    ctx.fillRect(0, 0, 512, 256);
+
+    // Draw cloud patterns
+    ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
+    for (let i = 0; i < 100; i++) {
+      const x = Math.random() * 512;
+      const y = Math.random() * 256;
+      const rx = Math.random() * 40 + 20;
+      const ry = Math.random() * 20 + 10;
+      ctx.beginPath();
+      ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.needsUpdate = true;
+    return texture;
   }, []);
 
   useFrame((state) => {
     const t = state.clock.elapsedTime;
-    
+
     // Smooth mouse following
-    targetRotation.current.x = mouse.y * 0.5;
+    targetRotation.current.x = mouse.y * 0.3;
     targetRotation.current.y = mouse.x * 0.5;
-    
-    if (groupRef.current) {
-      groupRef.current.rotation.x = THREE.MathUtils.lerp(
-        groupRef.current.rotation.x,
-        targetRotation.current.x + t * 0.05,
-        0.05
+
+    if (earthRef.current) {
+      earthRef.current.rotation.x = THREE.MathUtils.lerp(
+        earthRef.current.rotation.x,
+        targetRotation.current.x,
+        0.03
       );
-      groupRef.current.rotation.y = THREE.MathUtils.lerp(
-        groupRef.current.rotation.y,
-        targetRotation.current.y + t * 0.08,
-        0.05
+      earthRef.current.rotation.y = THREE.MathUtils.lerp(
+        earthRef.current.rotation.y,
+        targetRotation.current.y + t * 0.1,
+        0.03
       );
     }
-    
-    if (meshRef.current) {
-      const positions = meshRef.current.geometry.attributes.position;
-      const original = meshRef.current.geometry.attributes.position.array;
-      
-      for (let i = 0; i < positions.count; i++) {
-        const x = original[i * 3];
-        const y = original[i * 3 + 1];
-        const z = original[i * 3 + 2];
-        
-        const noise = Math.sin(x * 2 + t) * Math.cos(y * 2 + t) * 0.1;
-        positions.setXYZ(
-          i,
-          x + noise * x * 0.1,
-          y + noise * y * 0.1,
-          z + noise * z * 0.1
-        );
-      }
-      positions.needsUpdate = true;
-    }
-    
-    if (wireframeRef.current) {
-      wireframeRef.current.rotation.x = -t * 0.03;
-      wireframeRef.current.rotation.y = -t * 0.05;
-    }
-    
-    if (particlesRef.current) {
-      particlesRef.current.rotation.y = t * 0.02 + mouse.x * 0.2;
-      particlesRef.current.rotation.x = Math.sin(t * 0.1) * 0.1 + mouse.y * 0.2;
+
+    if (cloudsRef.current) {
+      cloudsRef.current.rotation.y = t * 0.05;
     }
   });
 
   return (
-    <group ref={groupRef}>
-      {/* Main glass-like icosahedron */}
-      <mesh ref={meshRef} scale={1.2}>
-        <icosahedronGeometry args={[1, 4]} />
-        <MeshTransmissionMaterial
-          backside
-          samples={16}
-          thickness={0.5}
-          chromaticAberration={0.2}
-          anisotropy={0.3}
-          distortion={0.5}
-          distortionScale={0.5}
-          temporalDistortion={0.1}
-          iridescence={1}
-          iridescenceIOR={1}
-          iridescenceThicknessRange={[0, 1400]}
-          color="#0ea5e9"
-          transmission={0.95}
-          roughness={0.1}
-          ior={1.5}
+    <group ref={earthRef}>
+      {/* Earth sphere */}
+      <mesh>
+        <sphereGeometry args={[1.5, 64, 64]} />
+        <meshStandardMaterial
+          map={earthTexture}
+          metalness={0.1}
+          roughness={0.8}
         />
       </mesh>
 
-      {/* Outer wireframe */}
-      <mesh ref={wireframeRef} scale={1.6}>
-        <icosahedronGeometry args={[1, 2]} />
+      {/* Cloud layer */}
+      <mesh ref={cloudsRef} scale={1.02}>
+        <sphereGeometry args={[1.5, 64, 64]} />
+        <meshStandardMaterial
+          map={cloudTexture}
+          transparent
+          opacity={0.4}
+          depthWrite={false}
+        />
+      </mesh>
+
+      {/* Atmosphere glow */}
+      <mesh ref={glowRef} scale={1.15}>
+        <sphereGeometry args={[1.5, 64, 64]} />
         <meshBasicMaterial
-          color="#22d3ee"
-          wireframe
+          color="#60a5fa"
           transparent
-          opacity={0.15}
+          opacity={0.1}
+          side={THREE.BackSide}
         />
       </mesh>
 
-      {/* Inner glowing core */}
-      <mesh scale={0.4}>
-        <sphereGeometry args={[1, 32, 32]} />
-        <meshBasicMaterial color="#06b6d4" transparent opacity={0.6} />
-      </mesh>
-
-      {/* Orbital ring 1 */}
-      <mesh rotation={[Math.PI / 3, 0, 0]}>
-        <torusGeometry args={[1.8, 0.015, 16, 100]} />
-        <meshBasicMaterial color="#8b5cf6" transparent opacity={0.6} />
-      </mesh>
-
-      {/* Orbital ring 2 */}
-      <mesh rotation={[-Math.PI / 4, Math.PI / 4, 0]}>
-        <torusGeometry args={[2, 0.01, 16, 100]} />
-        <meshBasicMaterial color="#06b6d4" transparent opacity={0.4} />
-      </mesh>
-
-      {/* Floating particles */}
-      <points ref={particlesRef}>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            count={particles.positions.length / 3}
-            array={particles.positions}
-            itemSize={3}
-          />
-          <bufferAttribute
-            attach="attributes-color"
-            count={particles.colors.length / 3}
-            array={particles.colors}
-            itemSize={3}
-          />
-        </bufferGeometry>
-        <pointsMaterial
-          size={0.02}
-          vertexColors
+      {/* Inner atmosphere rim */}
+      <mesh scale={1.08}>
+        <sphereGeometry args={[1.5, 64, 64]} />
+        <shaderMaterial
           transparent
-          opacity={0.8}
-          sizeAttenuation
+          uniforms={{
+            glowColor: { value: new THREE.Color("#3b82f6") },
+          }}
+          vertexShader={`
+            varying vec3 vNormal;
+            void main() {
+              vNormal = normalize(normalMatrix * normal);
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+          `}
+          fragmentShader={`
+            varying vec3 vNormal;
+            uniform vec3 glowColor;
+            void main() {
+              float intensity = pow(0.7 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.0);
+              gl_FragColor = vec4(glowColor, intensity * 0.5);
+            }
+          `}
+          side={THREE.FrontSide}
+          depthWrite={false}
         />
-      </points>
+      </mesh>
+
+      {/* Orbital ring */}
+      <mesh rotation={[Math.PI / 2.5, 0.2, 0]}>
+        <torusGeometry args={[2.2, 0.008, 16, 100]} />
+        <meshBasicMaterial color="#8b5cf6" transparent opacity={0.5} />
+      </mesh>
+
+      {/* Second orbital ring */}
+      <mesh rotation={[Math.PI / 1.8, -0.3, 0.5]}>
+        <torusGeometry args={[2.4, 0.005, 16, 100]} />
+        <meshBasicMaterial color="#06b6d4" transparent opacity={0.3} />
+      </mesh>
     </group>
   );
 };
@@ -173,13 +253,22 @@ const AbstractShape = ({ mouse }: { mouse: MousePosition }) => {
 const Scene = ({ mouse }: { mouse: MousePosition }) => {
   return (
     <>
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[10, 10, 5]} intensity={2} />
-      <pointLight position={[-10, -10, -10]} intensity={1} color="#8b5cf6" />
-      <pointLight position={[10, -10, 10]} intensity={0.5} color="#06b6d4" />
+      <ambientLight intensity={0.3} />
+      <directionalLight position={[5, 3, 5]} intensity={2} color="#ffffff" />
+      <pointLight position={[-10, -5, -10]} intensity={0.5} color="#3b82f6" />
       
-      <Float speed={1.5} rotationIntensity={0.1} floatIntensity={0.3}>
-        <AbstractShape mouse={mouse} />
+      <Stars
+        radius={80}
+        depth={60}
+        count={3000}
+        factor={3}
+        saturation={0.1}
+        fade
+        speed={0.3}
+      />
+
+      <Float speed={1} rotationIntensity={0.05} floatIntensity={0.2}>
+        <Earth mouse={mouse} />
       </Float>
     </>
   );
@@ -191,12 +280,9 @@ const HeroSphere = () => {
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-        const y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-        setMouse({ x, y });
-      }
+      const x = (e.clientX / window.innerWidth) * 2 - 1;
+      const y = -(e.clientY / window.innerHeight) * 2 + 1;
+      setMouse({ x, y });
     };
 
     window.addEventListener("mousemove", handleMouseMove);
