@@ -1,116 +1,133 @@
 import { useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Float, Stars } from "@react-three/drei";
+import { Float, Stars, MeshDistortMaterial } from "@react-three/drei";
 import * as THREE from "three";
 
-const AnimatedRings = () => {
-  const groupRef = useRef<THREE.Group>(null);
-  
-  const rings = useMemo(() => {
-    const ringData = [];
-    const ringCount = 8;
-    
-    for (let i = 0; i < ringCount; i++) {
-      const curve = new THREE.EllipseCurve(
-        0, 0,
-        2.2, 2.2,
-        0, Math.PI * 2,
-        false,
-        0
-      );
-      
-      const points = curve.getPoints(100);
-      const geometry = new THREE.BufferGeometry().setFromPoints(
-        points.map(p => new THREE.Vector3(p.x, p.y, 0))
-      );
-      
-      ringData.push({
-        geometry,
-        rotation: [
-          (Math.PI / ringCount) * i + Math.random() * 0.3,
-          (Math.PI / ringCount) * i * 1.5,
-          Math.random() * 0.5
-        ],
-        color: i % 2 === 0 ? "#60a5fa" : "#c4b5fd",
-        speed: 0.3 + Math.random() * 0.2,
-        offset: Math.random() * Math.PI * 2
-      });
-    }
-    return ringData;
-  }, []);
+const Globe = () => {
+  const globeRef = useRef<THREE.Group>(null);
+  const innerGlobeRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
-    if (groupRef.current) {
-      groupRef.current.rotation.y = state.clock.elapsedTime * 0.15;
-      groupRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.1) * 0.1;
+    if (globeRef.current) {
+      globeRef.current.rotation.y = state.clock.elapsedTime * 0.1;
+    }
+    if (innerGlobeRef.current) {
+      innerGlobeRef.current.rotation.y = state.clock.elapsedTime * 0.05;
     }
   });
 
+  const ribbons = useMemo(() => {
+    return Array.from({ length: 12 }, (_, i) => ({
+      rotation: [
+        (Math.PI / 6) * i + Math.random() * 0.2,
+        (Math.PI / 4) * i,
+        Math.random() * 0.3
+      ] as [number, number, number],
+      color: i % 3 === 0 ? "#3b82f6" : i % 3 === 1 ? "#8b5cf6" : "#06b6d4",
+      arc: Math.PI * (1.2 + Math.random() * 0.6),
+      radius: 1.1 + (i % 3) * 0.05,
+      thickness: 0.025 + Math.random() * 0.015,
+    }));
+  }, []);
+
   return (
-    <group ref={groupRef}>
-      {/* Core sphere */}
-      <mesh>
-        <sphereGeometry args={[1.5, 64, 64]} />
-        <meshStandardMaterial
-          color="#0f172a"
-          metalness={0.9}
+    <group ref={globeRef}>
+      {/* Core dark sphere with reflections */}
+      <mesh ref={innerGlobeRef}>
+        <sphereGeometry args={[0.9, 128, 128]} />
+        <MeshDistortMaterial
+          color="#0c1222"
+          metalness={1}
           roughness={0.1}
-          envMapIntensity={1}
-        />
-      </mesh>
-      
-      {/* Inner glow */}
-      <mesh>
-        <sphereGeometry args={[1.52, 64, 64]} />
-        <meshBasicMaterial
-          color="#22d3ee"
-          transparent
-          opacity={0.1}
+          distort={0.1}
+          speed={2}
         />
       </mesh>
 
-      {/* Animated ribbon rings */}
-      {rings.map((ring, index) => (
-        <RibbonRing key={index} {...ring} index={index} />
+      {/* Glass outer shell */}
+      <mesh>
+        <sphereGeometry args={[0.95, 64, 64]} />
+        <meshPhysicalMaterial
+          color="#1e3a5f"
+          metalness={0.2}
+          roughness={0}
+          transmission={0.6}
+          thickness={0.5}
+          transparent
+          opacity={0.3}
+        />
+      </mesh>
+
+      {/* Inner glow core */}
+      <mesh>
+        <sphereGeometry args={[0.5, 32, 32]} />
+        <meshBasicMaterial color="#22d3ee" transparent opacity={0.15} />
+      </mesh>
+
+      {/* City lights texture simulation */}
+      <points>
+        <sphereGeometry args={[0.91, 64, 64]} />
+        <pointsMaterial
+          color="#fbbf24"
+          size={0.008}
+          transparent
+          opacity={0.8}
+          sizeAttenuation
+        />
+      </points>
+
+      {/* Ribbon rings */}
+      {ribbons.map((ribbon, i) => (
+        <RibbonRing key={i} {...ribbon} index={i} />
       ))}
+
+      {/* Atmosphere glow */}
+      <mesh scale={1.25}>
+        <sphereGeometry args={[1, 64, 64]} />
+        <meshBasicMaterial
+          color="#3b82f6"
+          transparent
+          opacity={0.05}
+          side={THREE.BackSide}
+        />
+      </mesh>
     </group>
   );
 };
 
-const RibbonRing = ({ 
-  rotation, 
-  color, 
-  speed, 
-  offset,
-  index 
-}: { 
-  geometry: THREE.BufferGeometry;
-  rotation: number[];
+const RibbonRing = ({
+  rotation,
+  color,
+  arc,
+  radius,
+  thickness,
+  index,
+}: {
+  rotation: [number, number, number];
   color: string;
-  speed: number;
-  offset: number;
+  arc: number;
+  radius: number;
+  thickness: number;
   index: number;
 }) => {
   const meshRef = useRef<THREE.Mesh>(null);
-  
+
   useFrame((state) => {
     if (meshRef.current) {
-      meshRef.current.rotation.z = state.clock.elapsedTime * speed + offset;
+      meshRef.current.rotation.z = 
+        Math.sin(state.clock.elapsedTime * 0.3 + index) * 0.1;
     }
   });
 
   return (
-    <mesh
-      ref={meshRef}
-      rotation={[rotation[0], rotation[1], rotation[2]]}
-    >
-      <torusGeometry args={[2.2, 0.08, 16, 100, Math.PI * 1.5]} />
+    <mesh ref={meshRef} rotation={rotation}>
+      <torusGeometry args={[radius, thickness, 16, 100, arc]} />
       <meshStandardMaterial
         color={color}
-        metalness={0.3}
-        roughness={0.4}
+        metalness={0.6}
+        roughness={0.2}
         emissive={color}
-        emissiveIntensity={0.2}
+        emissiveIntensity={0.4}
       />
     </mesh>
   );
@@ -119,33 +136,31 @@ const RibbonRing = ({
 const Scene = () => {
   return (
     <>
-      <ambientLight intensity={0.3} />
-      <pointLight position={[10, 10, 10]} intensity={1} color="#60a5fa" />
-      <pointLight position={[-10, -10, -10]} intensity={0.5} color="#c4b5fd" />
+      {/* Lighting setup for realism */}
+      <ambientLight intensity={0.2} />
+      <directionalLight position={[5, 5, 5]} intensity={1.5} color="#ffffff" />
+      <pointLight position={[-5, -5, 5]} intensity={0.8} color="#3b82f6" />
+      <pointLight position={[5, -5, -5]} intensity={0.5} color="#8b5cf6" />
       <spotLight
-        position={[0, 5, 5]}
-        angle={0.5}
+        position={[0, 10, 0]}
+        angle={0.3}
         penumbra={1}
-        intensity={1}
-        color="#22d3ee"
+        intensity={0.8}
+        color="#06b6d4"
       />
-      
+
       <Stars
-        radius={50}
-        depth={50}
-        count={1000}
-        factor={4}
-        saturation={0}
+        radius={80}
+        depth={60}
+        count={2000}
+        factor={3}
+        saturation={0.1}
         fade
-        speed={1}
+        speed={0.5}
       />
-      
-      <Float
-        speed={2}
-        rotationIntensity={0.2}
-        floatIntensity={0.5}
-      >
-        <AnimatedRings />
+
+      <Float speed={1.5} rotationIntensity={0.1} floatIntensity={0.3}>
+        <Globe />
       </Float>
     </>
   );
@@ -153,11 +168,12 @@ const Scene = () => {
 
 const HeroSphere = () => {
   return (
-    <div className="w-full h-full min-h-[400px] lg:min-h-[500px]">
+    <div className="w-full h-[280px] lg:h-[350px]">
       <Canvas
-        camera={{ position: [0, 0, 6], fov: 50 }}
+        camera={{ position: [0, 0, 3.5], fov: 45 }}
         gl={{ antialias: true, alpha: true }}
-        style={{ background: 'transparent' }}
+        style={{ background: "transparent" }}
+        dpr={[1, 2]}
       >
         <Scene />
       </Canvas>
