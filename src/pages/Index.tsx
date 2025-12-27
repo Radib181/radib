@@ -11,12 +11,16 @@ import WhyMeSection from "@/components/WhyMeSection";
 import CTASection from "@/components/CTASection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
+import SmartBackground from "@/components/SmartBackground";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background relative">
+    <div className="min-h-screen bg-black relative">
+      {/* Global smart background animation */}
+      <SmartBackground />
+      
       <Header />
-      <main>
+      <main className="relative z-10">
         <HeroSection />
         <AboutSection />
         <StatsSection />
