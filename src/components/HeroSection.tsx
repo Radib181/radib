@@ -1,6 +1,5 @@
 import { ArrowRight, Zap, Bot, Workflow } from "lucide-react";
 import { Button } from "./ui/button";
-import SmartBackground from "./SmartBackground";
 
 const HeroSection = () => {
   const scrollToProjects = () => {
@@ -12,26 +11,15 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-background">
-      {/* Smart animated background - fixed position handled inside component */}
-      <SmartBackground />
-      
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-transparent">
       {/* Premium layered gradient overlays */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Aurora gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-aurora opacity-20" />
+        <div className="absolute inset-0 bg-gradient-aurora opacity-10" />
         
-        {/* Morphing gradient blobs */}
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[150px] animate-morph animate-pulse-slow" />
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-accent/15 rounded-full blur-[120px] animate-morph animate-pulse-slow animation-delay-1000" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/8 rounded-full blur-[180px] animate-float-smooth" />
-        
-        {/* Noise texture overlay */}
-        <div className="absolute inset-0 opacity-[0.015] mix-blend-overlay"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-          }}
-        />
+        {/* Morphing gradient blobs - subtle */}
+        <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[150px] animate-morph animate-pulse-slow" />
+        <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-accent/8 rounded-full blur-[120px] animate-morph animate-pulse-slow animation-delay-1000" />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10 pt-24 pb-16">
@@ -72,7 +60,7 @@ const HeroSection = () => {
             ].map((item, i) => (
               <div
                 key={i}
-                className="group flex items-center gap-2 px-5 py-2.5 rounded-full bg-card/60 border border-border/50 backdrop-blur-md hover-lift hover-border-glow cursor-default"
+                className="group flex items-center gap-2 px-5 py-2.5 rounded-full bg-card/80 border border-border/50 backdrop-blur-md hover-lift hover-border-glow cursor-default"
               >
                 <item.icon className="w-4 h-4 text-primary group-hover:scale-110 transition-transform duration-300" />
                 <span className="text-sm font-medium group-hover:text-gradient transition-all duration-300">{item.label}</span>
@@ -107,7 +95,7 @@ const HeroSection = () => {
               {[1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
-                  className="w-11 h-11 rounded-full bg-gradient-to-br from-primary/30 to-accent/30 border-2 border-background flex items-center justify-center shadow-lg hover:scale-110 hover:z-10 transition-all duration-300 cursor-pointer"
+                  className="w-11 h-11 rounded-full bg-gradient-to-br from-primary/30 to-accent/30 border-2 border-black flex items-center justify-center shadow-lg hover:scale-110 hover:z-10 transition-all duration-300 cursor-pointer"
                   style={{ animationDelay: `${i * 100}ms` }}
                 >
                   <span className="text-xs font-bold text-gradient">
@@ -124,16 +112,9 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* Bottom fade with gradient */}
-      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-background via-background/90 to-transparent" />
-      
       {/* Decorative side elements */}
-      <div className="absolute left-8 top-1/2 -translate-y-1/2 w-px h-48 bg-gradient-to-b from-transparent via-primary/40 to-transparent hidden lg:block animate-pulse-slow" />
-      <div className="absolute right-8 top-1/3 w-px h-40 bg-gradient-to-b from-transparent via-accent/30 to-transparent hidden lg:block animate-pulse-slow animation-delay-500" />
-      
-      {/* Corner accents */}
-      <div className="absolute top-32 left-32 w-32 h-32 border border-primary/10 rounded-full hidden xl:block animate-float-smooth" />
-      <div className="absolute bottom-48 right-32 w-24 h-24 border border-accent/10 rounded-full hidden xl:block animate-float-delayed" />
+      <div className="absolute left-8 top-1/2 -translate-y-1/2 w-px h-48 bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden lg:block animate-pulse-slow" />
+      <div className="absolute right-8 top-1/3 w-px h-40 bg-gradient-to-b from-transparent via-accent/20 to-transparent hidden lg:block animate-pulse-slow animation-delay-500" />
     </section>
   );
 };
