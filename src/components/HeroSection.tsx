@@ -1,5 +1,6 @@
 import { ArrowRight, Zap, Bot, Workflow } from "lucide-react";
 import { Button } from "./ui/button";
+import SmartBackground from "./SmartBackground";
 
 const HeroSection = () => {
   const scrollToProjects = () => {
@@ -12,19 +13,23 @@ const HeroSection = () => {
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Premium layered background */}
+      {/* Smart animated background */}
+      <SmartBackground />
+      
+      {/* Premium layered gradient overlays */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-background" />
+        <div className="absolute inset-0 bg-gradient-hero" />
         
-        <div className="absolute inset-0 opacity-40">
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/10 via-transparent to-accent/10" />
-          <div className="absolute bottom-0 right-0 w-3/4 h-3/4 bg-gradient-to-tl from-primary/5 via-transparent to-transparent" />
-        </div>
-
-        <div className="absolute top-20 left-20 w-[500px] h-[500px] bg-primary/8 rounded-full blur-[150px] animate-pulse-slow" />
-        <div className="absolute bottom-20 right-20 w-[400px] h-[400px] bg-accent/6 rounded-full blur-[120px] animate-pulse-slow animation-delay-1000" />
+        {/* Aurora gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-aurora opacity-30" />
         
-        <div className="absolute inset-0 opacity-[0.015] mix-blend-overlay"
+        {/* Morphing gradient blobs */}
+        <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-primary/15 rounded-full blur-[180px] animate-morph animate-pulse-slow" />
+        <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[150px] animate-morph animate-pulse-slow animation-delay-1000" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[200px] animate-float-smooth" />
+        
+        {/* Noise texture overlay */}
+        <div className="absolute inset-0 opacity-[0.02] mix-blend-overlay"
           style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
           }}
@@ -33,22 +38,22 @@ const HeroSection = () => {
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10 pt-24 pb-16">
         <div className="max-w-3xl mx-auto text-center space-y-8">
-          {/* Eyebrow text */}
+          {/* Eyebrow text with premium styling */}
           <div className="flex items-center justify-center gap-3 animate-fade-in">
-            <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary" />
-            <span className="text-sm font-medium tracking-wider text-primary uppercase">
+            <div className="h-px w-16 bg-gradient-to-r from-transparent via-primary to-transparent" />
+            <span className="text-sm font-medium tracking-[0.2em] text-gradient uppercase">
               AI Automation Expert
             </span>
-            <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary" />
+            <div className="h-px w-16 bg-gradient-to-r from-transparent via-primary to-transparent" />
           </div>
 
-          {/* Main Headline */}
+          {/* Main Headline with premium typography */}
           <h1 className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-bold leading-[1.05] tracking-tight animate-fade-in-up">
             <span className="block text-foreground">We Build Systems</span>
-            <span className="block mt-2">
+            <span className="block mt-2 text-foreground/90">
               That Make Business
             </span>
-            <span className="block mt-2 text-gradient">
+            <span className="block mt-2 text-gradient animate-gradient" style={{ backgroundSize: '200% 200%' }}>
               Run on Autopilot
             </span>
           </h1>
@@ -60,7 +65,7 @@ const HeroSection = () => {
             that work while you sleep.
           </p>
 
-          {/* Feature pills */}
+          {/* Feature pills with hover effects */}
           <div className="flex flex-wrap justify-center gap-3 animate-fade-in-up animation-delay-150">
             {[
               { icon: Bot, label: "AI Agents" },
@@ -69,43 +74,45 @@ const HeroSection = () => {
             ].map((item, i) => (
               <div
                 key={i}
-                className="flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/50 border border-border/50 backdrop-blur-sm"
+                className="group flex items-center gap-2 px-5 py-2.5 rounded-full bg-card/60 border border-border/50 backdrop-blur-md hover-lift hover-border-glow cursor-default"
               >
-                <item.icon className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium">{item.label}</span>
+                <item.icon className="w-4 h-4 text-primary group-hover:scale-110 transition-transform duration-300" />
+                <span className="text-sm font-medium group-hover:text-gradient transition-all duration-300">{item.label}</span>
               </div>
             ))}
           </div>
 
-          {/* CTA Buttons */}
+          {/* CTA Buttons with premium styling */}
           <div className="flex flex-wrap justify-center gap-4 pt-4 animate-fade-in-up animation-delay-200">
             <Button
               size="lg"
-              className="group h-12 px-8 text-base font-semibold"
+              variant="hero"
+              className="group h-13 px-8 text-base font-semibold shadow-button hover:shadow-button-hover"
               onClick={scrollToProjects}
             >
-              Explore Work
-              <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <span className="relative z-10">Explore Work</span>
+              <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
             </Button>
             <Button
-              variant="ghost"
+              variant="heroOutline"
               size="lg"
-              className="h-12 px-8 text-base font-semibold hover:bg-primary/5"
+              className="h-13 px-8 text-base font-semibold hover-glow"
               onClick={scrollToContact}
             >
               Start a Project
             </Button>
           </div>
 
-          {/* Social proof */}
+          {/* Social proof with premium styling */}
           <div className="flex items-center justify-center gap-6 pt-8 animate-fade-in-up animation-delay-300">
             <div className="flex -space-x-3">
               {[1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
-                  className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 border-2 border-background flex items-center justify-center"
+                  className="w-11 h-11 rounded-full bg-gradient-to-br from-primary/30 to-accent/30 border-2 border-background flex items-center justify-center shadow-lg hover:scale-110 hover:z-10 transition-all duration-300 cursor-pointer"
+                  style={{ animationDelay: `${i * 100}ms` }}
                 >
-                  <span className="text-xs font-bold text-primary">
+                  <span className="text-xs font-bold text-gradient">
                     {["A", "B", "C", "D"][i - 1]}
                   </span>
                 </div>
@@ -119,12 +126,16 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* Bottom fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background via-background/80 to-transparent" />
+      {/* Bottom fade with gradient */}
+      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-background via-background/90 to-transparent" />
       
-      {/* Side decorative elements */}
-      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-px h-40 bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden lg:block" />
-      <div className="absolute right-0 top-1/3 w-px h-32 bg-gradient-to-b from-transparent via-accent/20 to-transparent hidden lg:block" />
+      {/* Decorative side elements */}
+      <div className="absolute left-8 top-1/2 -translate-y-1/2 w-px h-48 bg-gradient-to-b from-transparent via-primary/40 to-transparent hidden lg:block animate-pulse-slow" />
+      <div className="absolute right-8 top-1/3 w-px h-40 bg-gradient-to-b from-transparent via-accent/30 to-transparent hidden lg:block animate-pulse-slow animation-delay-500" />
+      
+      {/* Corner accents */}
+      <div className="absolute top-32 left-32 w-32 h-32 border border-primary/10 rounded-full hidden xl:block animate-float-smooth" />
+      <div className="absolute bottom-48 right-32 w-24 h-24 border border-accent/10 rounded-full hidden xl:block animate-float-delayed" />
     </section>
   );
 };
