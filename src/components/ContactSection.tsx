@@ -7,8 +7,8 @@ import { Send, Loader2, Mail, Phone, MapPin, Sparkles } from "lucide-react";
 import emailjs from '@emailjs/browser';
 
 // EmailJS Configuration
-const EMAILJS_SERVICE_ID = "service_y9lfjm6";
-const EMAILJS_TEMPLATE_ID = "template_xvd2vqp"; // Your template ID
+const EMAILJS_SERVICE_ID = "service_l70ltdb";
+const EMAILJS_TEMPLATE_ID = "template_xvd2vqp"; // Update this with your actual template ID from EmailJS
 const EMAILJS_PUBLIC_KEY = "bJ0aAuleFSGzxWM_C";
 
 const ContactSection = () => {
