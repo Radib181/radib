@@ -1,13 +1,19 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Send, Loader2, Mail, Phone, MapPin, Sparkles } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import emailjs from '@emailjs/browser';
+
+// EmailJS Configuration
+const EMAILJS_SERVICE_ID = "service_y9lfjm6";
+const EMAILJS_TEMPLATE_ID = "template_XXXXXX"; // TODO: Replace with your actual template ID
+const EMAILJS_PUBLIC_KEY = "bJ0aAuleFSGzxWM_C";
 
 const ContactSection = () => {
   const { toast } = useToast();
+  const formRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -20,11 +26,12 @@ const ContactSection = () => {
     setIsSubmitting(true);
 
     try {
-      const { data, error } = await supabase.functions.invoke('send-contact-email', {
-        body: formData
-      });
-
-      if (error) throw error;
+      await emailjs.sendForm(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        formRef.current!,
+        EMAILJS_PUBLIC_KEY
+      );
 
       toast({
         title: "Message sent!",
@@ -107,6 +114,7 @@ const ContactSection = () => {
             {/* Contact Form */}
             <div className="lg:col-span-3 animate-fade-in-up animation-delay-200">
               <form 
+                ref={formRef}
                 onSubmit={handleSubmit} 
                 className="space-y-6 p-8 rounded-2xl bg-card/80 border border-border/50 backdrop-blur-md shadow-card hover:shadow-card-hover transition-all duration-500"
               >
@@ -114,6 +122,7 @@ const ContactSection = () => {
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-foreground/80">Name</label>
                     <Input
+                      name="user_name"
                       placeholder="Your name"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -124,6 +133,7 @@ const ContactSection = () => {
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-foreground/80">Email</label>
                     <Input
+                      name="user_email"
                       type="email"
                       placeholder="your@email.com"
                       value={formData.email}
@@ -137,6 +147,7 @@ const ContactSection = () => {
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground/80">Message</label>
                   <Textarea
+                    name="message"
                     placeholder="Tell me about your project..."
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
