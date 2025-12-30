@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,12 +8,11 @@ import emailjs from '@emailjs/browser';
 
 // EmailJS Configuration
 const EMAILJS_SERVICE_ID = "service_y9lfjm6";
-const EMAILJS_TEMPLATE_ID = "template_XXXXXX"; // TODO: Replace with your actual template ID
+const EMAILJS_TEMPLATE_ID = "template_xvd2vqp"; // Your template ID
 const EMAILJS_PUBLIC_KEY = "bJ0aAuleFSGzxWM_C";
 
 const ContactSection = () => {
   const { toast } = useToast();
-  const formRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -26,10 +25,15 @@ const ContactSection = () => {
     setIsSubmitting(true);
 
     try {
-      await emailjs.sendForm(
+      await emailjs.send(
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
-        formRef.current!,
+        {
+          user_name: formData.name,
+          user_email: formData.email,
+          message: formData.message,
+          to_email: "radibeshan@gmail.com"
+        },
         EMAILJS_PUBLIC_KEY
       );
 
@@ -114,7 +118,6 @@ const ContactSection = () => {
             {/* Contact Form */}
             <div className="lg:col-span-3 animate-fade-in-up animation-delay-200">
               <form 
-                ref={formRef}
                 onSubmit={handleSubmit} 
                 className="space-y-6 p-8 rounded-2xl bg-card/80 border border-border/50 backdrop-blur-md shadow-card hover:shadow-card-hover transition-all duration-500"
               >
