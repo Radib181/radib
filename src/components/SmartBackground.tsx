@@ -12,10 +12,20 @@ interface Particle {
   maxLife: number;
 }
 
+interface Star {
+  x: number;
+  y: number;
+  size: number;
+  opacity: number;
+  twinkleSpeed: number;
+  twinklePhase: number;
+}
+
 const SmartBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef = useRef({ x: 0, y: 0, isActive: false });
   const particlesRef = useRef<Particle[]>([]);
+  const starsRef = useRef<Star[]>([]);
   const animationRef = useRef<number>();
 
   useEffect(() => {
@@ -36,24 +46,35 @@ const SmartBackground = () => {
     resize();
     window.addEventListener("resize", resize);
 
-    // Re-check height periodically for dynamic content
     const resizeInterval = setInterval(resize, 2000);
 
-    // Initialize particles with lower opacity
+    // Create particles with better visibility
     const createParticle = (x?: number, y?: number): Particle => ({
       x: x ?? Math.random() * window.innerWidth,
       y: y ?? Math.random() * document.documentElement.scrollHeight,
-      vx: (Math.random() - 0.5) * 0.4,
-      vy: (Math.random() - 0.5) * 0.4,
-      size: Math.random() * 1.5 + 0.5,
-      opacity: Math.random() * 0.25 + 0.05, // Much lower opacity
-      hue: 270 + Math.random() * 80,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      size: Math.random() * 2 + 1,
+      opacity: Math.random() * 0.4 + 0.15,
+      hue: 260 + Math.random() * 60,
       life: 0,
-      maxLife: Math.random() * 400 + 300,
+      maxLife: Math.random() * 500 + 400,
     });
 
-    const particleCount = 60; // Fewer particles
+    // Create stars for twinkling effect
+    const createStar = (): Star => ({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * document.documentElement.scrollHeight,
+      size: Math.random() * 1.5 + 0.5,
+      opacity: Math.random() * 0.6 + 0.2,
+      twinkleSpeed: Math.random() * 0.02 + 0.01,
+      twinklePhase: Math.random() * Math.PI * 2,
+    });
+
+    const particleCount = 80;
+    const starCount = 100;
     particlesRef.current = Array.from({ length: particleCount }, () => createParticle());
+    starsRef.current = Array.from({ length: starCount }, () => createStar());
 
     const handleMouseMove = (e: MouseEvent) => {
       mouseRef.current = { x: e.clientX, y: e.clientY + window.scrollY, isActive: true };
@@ -70,35 +91,48 @@ const SmartBackground = () => {
       const width = window.innerWidth;
       const height = document.documentElement.scrollHeight;
       
-      // Clear with solid black + slight fade
-      ctx.fillStyle = "rgba(0, 0, 0, 0.06)";
+      // Clear with black
+      ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
       ctx.fillRect(0, 0, width, height);
 
       const particles = particlesRef.current;
+      const stars = starsRef.current;
       const mouse = mouseRef.current;
+      const time = Date.now() * 0.001;
 
-      // Draw connecting lines (very subtle)
+      // Draw twinkling stars
+      stars.forEach((star) => {
+        const twinkle = Math.sin(time * star.twinkleSpeed * 10 + star.twinklePhase) * 0.5 + 0.5;
+        const currentOpacity = star.opacity * twinkle;
+        
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${currentOpacity})`;
+        ctx.fill();
+      });
+
+      // Draw connecting lines with gradient
       particles.forEach((particle, i) => {
-        if (particle.opacity < 0.05) return;
+        if (particle.opacity < 0.1) return;
         
         particles.slice(i + 1).forEach((other) => {
-          if (other.opacity < 0.05) return;
+          if (other.opacity < 0.1) return;
           
           const dx = other.x - particle.x;
           const dy = other.y - particle.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 120) {
-            const opacity = (1 - dist / 120) * 0.08 * Math.min(particle.opacity, other.opacity);
+          if (dist < 150) {
+            const opacity = (1 - dist / 150) * 0.15 * Math.min(particle.opacity, other.opacity);
             const gradient = ctx.createLinearGradient(particle.x, particle.y, other.x, other.y);
-            gradient.addColorStop(0, `hsla(${particle.hue}, 60%, 50%, ${opacity})`);
-            gradient.addColorStop(1, `hsla(${other.hue}, 60%, 50%, ${opacity})`);
+            gradient.addColorStop(0, `hsla(${particle.hue}, 70%, 60%, ${opacity})`);
+            gradient.addColorStop(1, `hsla(${other.hue}, 70%, 60%, ${opacity})`);
             
             ctx.beginPath();
             ctx.moveTo(particle.x, particle.y);
             ctx.lineTo(other.x, other.y);
             ctx.strokeStyle = gradient;
-            ctx.lineWidth = 0.5;
+            ctx.lineWidth = 0.8;
             ctx.stroke();
           }
         });
@@ -106,42 +140,37 @@ const SmartBackground = () => {
 
       // Update and draw particles
       particles.forEach((particle, index) => {
-        // Mouse interaction (subtle)
+        // Mouse interaction
         if (mouse.isActive) {
           const dx = mouse.x - particle.x;
           const dy = mouse.y - particle.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
           
-          if (dist < 200) {
-            const force = (200 - dist) / 200;
-            particle.vx += (dx / dist) * force * 0.015;
-            particle.vy += (dy / dist) * force * 0.015;
+          if (dist < 250) {
+            const force = (250 - dist) / 250;
+            particle.vx += (dx / dist) * force * 0.02;
+            particle.vy += (dy / dist) * force * 0.02;
           }
         }
 
-        // Update position
         particle.x += particle.vx;
         particle.y += particle.vy;
+        particle.vx *= 0.997;
+        particle.vy *= 0.997;
 
-        // Damping
-        particle.vx *= 0.998;
-        particle.vy *= 0.998;
-
-        // Life cycle
         particle.life++;
         if (particle.life > particle.maxLife) {
           particles[index] = createParticle();
           return;
         }
 
-        // Fade in/out based on life
         const lifeRatio = particle.life / particle.maxLife;
         const fadeOpacity = lifeRatio < 0.1 
           ? lifeRatio * 10 
-          : lifeRatio > 0.9 
-            ? (1 - lifeRatio) * 10 
+          : lifeRatio > 0.85 
+            ? (1 - lifeRatio) * 6.67 
             : 1;
-        particle.opacity = fadeOpacity * (Math.random() * 0.15 + 0.1); // Lower opacity
+        particle.opacity = fadeOpacity * (Math.random() * 0.2 + 0.2);
 
         // Wrap around edges
         if (particle.x < -50) particle.x = width + 50;
@@ -149,13 +178,14 @@ const SmartBackground = () => {
         if (particle.y < -50) particle.y = height + 50;
         if (particle.y > height + 50) particle.y = -50;
 
-        // Draw particle glow (very subtle)
-        const glowSize = particle.size * 3;
+        // Draw particle glow
+        const glowSize = particle.size * 4;
         const gradient = ctx.createRadialGradient(
           particle.x, particle.y, 0,
           particle.x, particle.y, glowSize
         );
-        gradient.addColorStop(0, `hsla(${particle.hue}, 50%, 50%, ${particle.opacity * 0.3})`);
+        gradient.addColorStop(0, `hsla(${particle.hue}, 70%, 60%, ${particle.opacity * 0.5})`);
+        gradient.addColorStop(0.5, `hsla(${particle.hue}, 60%, 50%, ${particle.opacity * 0.2})`);
         gradient.addColorStop(1, "transparent");
         
         ctx.fillStyle = gradient;
@@ -166,35 +196,35 @@ const SmartBackground = () => {
         // Draw particle core
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${particle.hue}, 60%, 60%, ${particle.opacity * 0.6})`;
+        ctx.fillStyle = `hsla(${particle.hue}, 80%, 70%, ${particle.opacity * 0.9})`;
         ctx.fill();
       });
 
-      // Draw mouse glow effect (very subtle)
+      // Mouse glow effect
       if (mouse.isActive) {
         const mouseGradient = ctx.createRadialGradient(
           mouse.x, mouse.y, 0,
-          mouse.x, mouse.y, 150
+          mouse.x, mouse.y, 200
         );
-        mouseGradient.addColorStop(0, "hsla(270, 60%, 50%, 0.04)");
-        mouseGradient.addColorStop(0.5, "hsla(185, 60%, 40%, 0.02)");
+        mouseGradient.addColorStop(0, "hsla(270, 70%, 55%, 0.08)");
+        mouseGradient.addColorStop(0.3, "hsla(280, 60%, 50%, 0.04)");
         mouseGradient.addColorStop(1, "transparent");
         
         ctx.fillStyle = mouseGradient;
         ctx.beginPath();
-        ctx.arc(mouse.x, mouse.y, 150, 0, Math.PI * 2);
+        ctx.arc(mouse.x, mouse.y, 200, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      // Ambient floating orbs (very subtle)
-      const time = Date.now() * 0.0008;
-      for (let i = 0; i < 2; i++) {
-        const orbX = width * (0.25 + i * 0.5) + Math.sin(time + i * 2) * 80;
-        const orbY = (height * 0.3) + Math.cos(time * 0.6 + i * 1.5) * 100;
-        const orbSize = 100 + Math.sin(time * 0.4 + i) * 30;
+      // Ambient floating orbs
+      for (let i = 0; i < 3; i++) {
+        const orbX = width * (0.2 + i * 0.3) + Math.sin(time * 0.5 + i * 2) * 100;
+        const orbY = (height * 0.25) + Math.cos(time * 0.4 + i * 1.5) * 120;
+        const orbSize = 150 + Math.sin(time * 0.3 + i) * 50;
         
         const orbGradient = ctx.createRadialGradient(orbX, orbY, 0, orbX, orbY, orbSize);
-        orbGradient.addColorStop(0, `hsla(${270 + i * 50}, 50%, 40%, 0.015)`);
+        orbGradient.addColorStop(0, `hsla(${260 + i * 30}, 60%, 45%, 0.03)`);
+        orbGradient.addColorStop(0.5, `hsla(${270 + i * 25}, 50%, 40%, 0.015)`);
         orbGradient.addColorStop(1, "transparent");
         
         ctx.fillStyle = orbGradient;
@@ -202,6 +232,14 @@ const SmartBackground = () => {
         ctx.arc(orbX, orbY, orbSize, 0, Math.PI * 2);
         ctx.fill();
       }
+
+      // Bottom gradient glow (purple/magenta)
+      const bottomGradient = ctx.createLinearGradient(0, height - 300, 0, height);
+      bottomGradient.addColorStop(0, "transparent");
+      bottomGradient.addColorStop(0.5, "hsla(300, 50%, 30%, 0.03)");
+      bottomGradient.addColorStop(1, "hsla(280, 60%, 25%, 0.06)");
+      ctx.fillStyle = bottomGradient;
+      ctx.fillRect(0, height - 300, width, 300);
 
       animationRef.current = requestAnimationFrame(animate);
     };
