@@ -3,56 +3,33 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Send, Loader2, Mail, Phone, MapPin, Sparkles } from "lucide-react";
-import emailjs from '@emailjs/browser';
-
-// EmailJS Configuration
-const EMAILJS_SERVICE_ID = "service_l70ltdb";
-const EMAILJS_TEMPLATE_ID = "template_xvd2vqp"; // Update this with your actual template ID from EmailJS
-const EMAILJS_PUBLIC_KEY = "bJ0aAuleFSGzxWM_C";
+import { Send, Mail, Phone, MapPin, Sparkles } from "lucide-react";
 
 const ContactSection = () => {
   const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: ""
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      await emailjs.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID,
-        {
-          user_name: formData.name,
-          user_email: formData.email,
-          message: formData.message,
-          to_email: "radibeshan@gmail.com"
-        },
-        EMAILJS_PUBLIC_KEY
-      );
-
-      toast({
-        title: "Message sent!",
-        description: "Thanks for reaching out. I'll get back to you within 24 hours.",
-      });
-
-      setFormData({ name: "", email: "", message: "" });
-    } catch (error: any) {
-      console.error("Error sending message:", error);
-      toast({
-        title: "Error sending message",
-        description: "Please try again or email me directly at radibeshan@gmail.com",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+    
+    // Create WhatsApp message with form data
+    const message = `Hi, I'm ${formData.name}.\n\nEmail: ${formData.email}\n\nMessage: ${formData.message}`;
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/8801842437899?text=${encodedMessage}`;
+    
+    // Open WhatsApp in new tab
+    window.open(whatsappUrl, '_blank');
+    
+    toast({
+      title: "Opening WhatsApp",
+      description: "You'll be redirected to WhatsApp to send your message.",
+    });
+    
+    setFormData({ name: "", email: "", message: "" });
   };
 
   return (
@@ -164,20 +141,10 @@ const ContactSection = () => {
                   type="submit" 
                   variant="hero" 
                   size="lg" 
-                  className="w-full group shadow-button hover:shadow-button-hover" 
-                  disabled={isSubmitting}
+                  className="w-full group shadow-button hover:shadow-button-hover"
                 >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      <span>Send Message</span>
-                      <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
-                    </>
-                  )}
+                  <span>Send Message</span>
+                  <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
                 </Button>
               </form>
             </div>
