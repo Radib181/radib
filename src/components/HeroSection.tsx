@@ -43,8 +43,7 @@ const HeroSection = () => {
 
           {/* Sub-headline */}
           <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed animate-fade-in-up animation-delay-100">
-            Replace manual work with AI Agents & n8n workflows that handle leads,
-            operations, and reporting— automatically
+            n8n Automation Expert ✦ AI Agent ✦ n8n Workflow ✦ Business Automation ✦
           </p>
 
           {/* CTA Buttons */}
