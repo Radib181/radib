@@ -3,7 +3,7 @@ import { Bot, Phone, Search, Globe, Image, LucideIcon } from "lucide-react";
 // Import real logos
 import n8nLogo from "@/assets/tech-logos/n8n.svg";
 import makeLogo from "@/assets/tech-logos/make.svg";
-import elevenlabsLogo from "@/assets/tech-logos/elevenlabs.svg";
+import elevenlabsLogo from "@/assets/tech-logos/elevenlabs-custom.png";
 import claudeLogo from "@/assets/tech-logos/claude.svg";
 import googlemapsLogo from "@/assets/tech-logos/googlemaps.svg";
 import supabaseLogo from "@/assets/tech-logos/supabase.svg";
