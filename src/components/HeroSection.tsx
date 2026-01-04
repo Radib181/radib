@@ -46,9 +46,7 @@ const HeroSection = () => {
 
           {/* Sub-headline */}
           <p className="text-base sm:text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed animate-fade-in-up animation-delay-100">
-            Transform your operations with intelligent automation. 
-            From AI agents to workflow systems—we engineer solutions 
-            that work while you sleep.
+            n8n Automation Expert ✦ AI Agent ✦ n8n Workflow ✦ Business Automation ✦
           </p>
 
           {/* Feature pills with hover effects */}
