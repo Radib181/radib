@@ -13,34 +13,33 @@ import {
   Brain,
   Mail,
   Phone,
-  Image,
-  Code
+  Image
 } from "lucide-react";
 
 const technologies = [
-  { name: "n8n", icon: Workflow, category: "Automation", featured: true },
-  { name: "Make", icon: Zap, category: "Automation", featured: true },
-  { name: "Vapi", icon: Phone, category: "Voice AI", featured: true },
-  { name: "ElevenLabs", icon: Mic, category: "Voice AI", featured: true },
-  { name: "OpenAI", icon: Bot, category: "AI", featured: true },
-  { name: "Claude AI", icon: Cpu, category: "AI", featured: true },
-  { name: "Google Maps", icon: MapPin, category: "Maps", featured: true },
-  { name: "Apify", icon: Search, category: "Scraping", featured: true },
-  { name: "Fal.ai", icon: Image, category: "AI", featured: true },
-  { name: "Supabase", icon: Database, category: "Database", featured: false },
-  { name: "Airtable", icon: Database, category: "Database", featured: false },
-  { name: "WhatsApp API", icon: MessageSquare, category: "Messaging", featured: false },
-  { name: "Messenger API", icon: MessageSquare, category: "Messaging", featured: false },
-  { name: "Google Cloud", icon: Cloud, category: "Cloud", featured: false },
-  { name: "Zapier", icon: Zap, category: "Automation", featured: false },
-  { name: "Tavily", icon: Globe, category: "Search", featured: false },
-  { name: "Gmail API", icon: Mail, category: "Email", featured: false },
-  { name: "Perplexity", icon: Brain, category: "AI Search", featured: false },
+  { name: "n8n", icon: Workflow, category: "Automation" },
+  { name: "Make", icon: Zap, category: "Automation" },
+  { name: "Vapi", icon: Phone, category: "Voice AI" },
+  { name: "ElevenLabs", icon: Mic, category: "Voice AI" },
+  { name: "OpenAI", icon: Bot, category: "AI" },
+  { name: "Claude AI", icon: Cpu, category: "AI" },
+  { name: "Google Maps", icon: MapPin, category: "Maps" },
+  { name: "Apify", icon: Search, category: "Scraping" },
+  { name: "Fal.ai", icon: Image, category: "AI" },
+  { name: "Supabase", icon: Database, category: "Database" },
+  { name: "Airtable", icon: Database, category: "Database" },
+  { name: "WhatsApp API", icon: MessageSquare, category: "Messaging" },
+  { name: "Messenger API", icon: MessageSquare, category: "Messaging" },
+  { name: "Google Cloud", icon: Cloud, category: "Cloud" },
+  { name: "Zapier", icon: Zap, category: "Automation" },
+  { name: "Tavily", icon: Globe, category: "Search" },
+  { name: "Gmail API", icon: Mail, category: "Email" },
+  { name: "Perplexity", icon: Brain, category: "AI Search" },
 ];
 
 const TechStackSection = () => {
-  const featuredTech = technologies.filter(t => t.featured);
-  const otherTech = technologies.filter(t => !t.featured);
+  // Duplicate for seamless infinite scroll
+  const duplicatedTech = [...technologies, ...technologies];
 
   return (
     <section className="py-20 sm:py-28 relative overflow-hidden">
@@ -62,14 +61,25 @@ const TechStackSection = () => {
               Expert-level proficiency with industry-leading tools and platforms
             </p>
           </div>
+        </div>
+      </div>
 
-          {/* Featured Tech - Larger Cards */}
-          <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-9 gap-3 sm:gap-4 mb-8">
-            {featuredTech.map((tech, index) => (
-              <div
-                key={tech.name}
-                className="group relative p-3 sm:p-4 rounded-xl bg-card/60 backdrop-blur-sm border border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1 text-center"
-              >
+      {/* Horizontal Scrolling Marquee */}
+      <div className="relative w-full overflow-hidden">
+        {/* Gradient Fade Left */}
+        <div className="absolute left-0 top-0 bottom-0 w-20 sm:w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+        
+        {/* Gradient Fade Right */}
+        <div className="absolute right-0 top-0 bottom-0 w-20 sm:w-32 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+
+        {/* Scrolling Track */}
+        <div className="flex animate-marquee hover:pause-animation">
+          {duplicatedTech.map((tech, index) => (
+            <div
+              key={`${tech.name}-${index}`}
+              className="flex-shrink-0 mx-2 sm:mx-3"
+            >
+              <div className="group relative p-4 sm:p-5 rounded-xl bg-card/60 backdrop-blur-sm border border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1 text-center w-[120px] sm:w-[140px]">
                 {/* Gradient overlay */}
                 <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 
@@ -88,30 +98,17 @@ const TechStackSection = () => {
                   {tech.category}
                 </p>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
-          {/* Other Tech - Smaller Row */}
-          <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
-            {otherTech.map((tech) => (
-              <div
-                key={tech.name}
-                className="group flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-full bg-card/40 border border-border/30 hover:border-primary/40 hover:bg-card/60 transition-all duration-300"
-              >
-                <tech.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary/70 group-hover:text-primary transition-colors" />
-                <span className="text-xs sm:text-sm text-muted-foreground group-hover:text-foreground transition-colors">
-                  {tech.name}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          {/* Bottom CTA */}
-          <div className="text-center mt-10 sm:mt-12">
-            <p className="text-muted-foreground text-sm sm:text-base">
-              + 50 more tools and APIs customized to your business needs
-            </p>
-          </div>
+      {/* Bottom CTA */}
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+        <div className="text-center mt-10 sm:mt-12">
+          <p className="text-muted-foreground text-sm sm:text-base">
+            + 50 more tools and APIs customized to your business needs
+          </p>
         </div>
       </div>
     </section>
