@@ -66,27 +66,6 @@ const HeroSection = () => {
             </Button>
           </div>
 
-          {/* Social Proof Stats */}
-          <div className="flex flex-col items-center gap-4 pt-8 animate-fade-in-up animation-delay-200">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-              <span><span className="text-foreground font-semibold">40+</span> Clients Automated Worldwide</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Clock className="w-4 h-4 text-primary" />
-              <span>Saved <span className="text-foreground font-semibold">1,000+</span> Hours Using AI Automation</span>
-            </div>
-            <div className="flex items-center gap-3 text-sm text-muted-foreground">
-              <Link2 className="w-4 h-4 text-primary" />
-              <span className="font-medium text-foreground">n8n</span>
-              <span>•</span>
-              <span className="font-medium text-foreground">OpenAI</span>
-              <span className="text-primary">●</span>
-              <span className="font-medium text-foreground">Make</span>
-              <span className="text-purple-400">◆</span>
-              <span className="font-medium text-foreground">AI Agents</span>
-            </div>
-          </div>
         </div>
       </div>
 
