@@ -8,7 +8,8 @@ import {
   MessageCircle, 
   BarChart3,
   Mic,
-  Target
+  Target,
+  GraduationCap
 } from "lucide-react";
 
 const skills = [
@@ -61,6 +62,11 @@ const skills = [
     icon: BarChart3,
     title: "Data Processing & Reporting",
     description: "Automated data collection, transformation, and insights generation"
+  },
+  {
+    icon: GraduationCap,
+    title: "Student Info Automation",
+    description: "Instant student data retrieval with AI Agent, Vector Search & Supabase integration"
   }
 ];
 
