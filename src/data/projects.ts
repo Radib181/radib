@@ -3,6 +3,7 @@ import messengerAgent from "@/assets/projects/messenger-agent.jpg";
 import emailScraper from "@/assets/projects/email-scraper.jpg";
 import smartOutreachAi from "@/assets/projects/smart-outreach-ai.png";
 import studentInfoAutomation from "@/assets/projects/student-info-automation.png";
+import ragDocsChatbot from "@/assets/projects/rag-docs-chatbot.png";
 
 export interface Project {
   id: string;
@@ -57,6 +58,26 @@ export const projects: Project[] = [
       "Webhook-based workflow",
       "No technical knowledge required",
       "Adaptable for any organization"
+    ]
+  },
+  {
+    id: "rag-docs-chatbot",
+    title: "Turn Your Docs into an AI Assistant ✦✦",
+    shortDescription: "Smart RAG chatbot that answers questions from your company documents",
+    thumbnail: ragDocsChatbot,
+    badge: "Enterprise Ready",
+    problem: "Employees and customers waste time searching through policies, FAQs, and internal docs. Knowledge is scattered, hard to find, and often outdated. Support teams answer the same questions repeatedly.",
+    solution: "Built a smart internal or customer-facing chatbot using RAG + Supabase. It answers questions from your company documents, supports voice & text, and updates automatically via Google Drive sync.",
+    tools: ["n8n", "OpenAI", "Supabase", "Google Drive", "Telegram", "Vector Store", "RAG", "Embeddings"],
+    automationFlow: "Document Upload (Google Drive) → Text Extraction → Embeddings Generation → Vector Store (Supabase) → User Query → Semantic Search → AI Response Generation → Voice/Text Output",
+    impact: "Instant answers from policies, FAQs, or internal docs. Auto-syncs new and updated files for always up-to-date knowledge. Works on Telegram, website, or any chat platform. Perfect for startups, SaaS, HR, and support teams.",
+    features: [
+      "RAG-powered document Q&A",
+      "Voice & text support",
+      "Auto-sync with Google Drive",
+      "Multi-platform deployment",
+      "Always up-to-date knowledge",
+      "Customizable to your brand"
     ]
   },
   {
