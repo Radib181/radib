@@ -62,22 +62,22 @@ export const projects: Project[] = [
   },
   {
     id: "rag-docs-chatbot",
-    title: "Turn Your Docs into an AI Assistant ✦✦",
-    shortDescription: "Smart RAG chatbot that answers questions from your company documents",
+    title: "AI Voice Calls & Appointments Automation ✦✦",
+    shortDescription: "Automate voice calls, appointments & notifications with RetellAI + Telegram + Google Calendar",
     thumbnail: ragDocsChatbot,
-    badge: "Enterprise Ready",
-    problem: "Employees and customers waste time searching through policies, FAQs, and internal docs. Knowledge is scattered, hard to find, and often outdated. Support teams answer the same questions repeatedly.",
-    solution: "Built a smart internal or customer-facing chatbot using RAG + Supabase. It answers questions from your company documents, supports voice & text, and updates automatically via Google Drive sync.",
-    tools: ["n8n", "OpenAI", "Supabase", "Google Drive", "Telegram", "Vector Store", "RAG", "Embeddings"],
-    automationFlow: "Document Upload (Google Drive) → Text Extraction → Embeddings Generation → Vector Store (Supabase) → User Query → Semantic Search → AI Response Generation → Voice/Text Output",
-    impact: "Instant answers from policies, FAQs, or internal docs. Auto-syncs new and updated files for always up-to-date knowledge. Works on Telegram, website, or any chat platform. Perfect for startups, SaaS, HR, and support teams.",
+    badge: "Voice AI",
+    problem: "Businesses rely heavily on phone calls for appointments and bookings. Manual calling is time-consuming, leads to missed calls, and requires constant human intervention. Scheduling confirmations and follow-ups are inconsistent.",
+    solution: "Built a complete automation system that connects AI voice calling, instant messaging, and calendar scheduling into one smooth workflow using RetellAI, Telegram, Google Calendar, and n8n. Fully automated, no human intervention required.",
+    tools: ["n8n", "RetellAI", "Telegram", "Google Calendar", "Voice AI", "Webhooks"],
+    automationFlow: "Telegram Command → n8n Workflow Trigger → RetellAI Voice Call → User Interaction → Appointment Confirmation → Google Calendar Booking → Telegram Status Notification",
+    impact: "Saves time and reduces missed calls. Turns manual phone operations into a fully automated system. Perfect for appointment-based services, call centers, AI voice agent agencies, and lead follow-up systems.",
     features: [
-      "RAG-powered document Q&A",
-      "Voice & text support",
-      "Auto-sync with Google Drive",
-      "Multi-platform deployment",
-      "Always up-to-date knowledge",
-      "Customizable to your brand"
+      "AI-powered voice calls via RetellAI",
+      "Trigger workflows from Telegram commands",
+      "Natural conversation handling",
+      "Automatic Google Calendar booking",
+      "Real-time status notifications",
+      "Zero human intervention required"
     ]
   },
   {
