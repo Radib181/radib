@@ -2,6 +2,7 @@ import newsletterAgent from "@/assets/projects/newsletter-agent.png";
 import messengerAgent from "@/assets/projects/messenger-agent.jpg";
 import emailScraper from "@/assets/projects/email-scraper.jpg";
 import smartOutreachAi from "@/assets/projects/smart-outreach-ai.png";
+import studentInfoAutomation from "@/assets/projects/student-info-automation.png";
 
 export interface Project {
   id: string;
@@ -36,6 +37,26 @@ export const projects: Project[] = [
       "AI-powered personalization",
       "Automated prospect research",
       "Ready-to-send messages"
+    ]
+  },
+  {
+    id: "student-info-automation",
+    title: "College Student Information Automation System 🚀",
+    shortDescription: "Instant student data retrieval replacing manual register searching",
+    thumbnail: studentInfoAutomation,
+    badge: "Real Problem Solved",
+    problem: "Managing student information manually is slow, inefficient, and error-prone. Searching through registers, Excel sheets, or long lists wastes valuable time for college administrators and staff.",
+    solution: "Built an automation system that delivers student details instantly. Enter a student name and instantly get roll number, department, and other relevant details—fetched directly from a database with AI-powered search.",
+    tools: ["n8n", "Supabase", "AI Agent", "Vector Search", "Webhook", "Google Gemini", "Pinecone"],
+    automationFlow: "Name Input → Webhook Trigger → Vector Search → AI Agent Processing → Database Query (Supabase) → Data Formatting → Instant Response",
+    impact: "Saves hours of manual searching time. Reduces human error in data retrieval. Easy to use with no technical knowledge required. Ideal for colleges, institutes, and admin teams.",
+    features: [
+      "Instant student data retrieval",
+      "AI Agent with Vector Search",
+      "Supabase database integration",
+      "Webhook-based workflow",
+      "No technical knowledge required",
+      "Adaptable for any organization"
     ]
   },
   {
