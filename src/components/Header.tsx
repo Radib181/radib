@@ -1,11 +1,34 @@
 import { Button } from "@/components/ui/button";
-import { Menu, X, Sparkles } from "lucide-react";
+import { Menu, X, Sparkles, Sun, Moon } from "lucide-react";
 import { useState, useEffect } from "react";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("");
+  const [theme, setTheme] = useState<"dark" | "light">(() => {
+    if (typeof window !== "undefined") {
+      return (localStorage.getItem("theme") as "dark" | "light") || "dark";
+    }
+    return "dark";
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === "light") {
+      root.classList.add("light");
+    } else {
+      root.classList.remove("light");
+    }
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+  };
+
+  const whatsappNumber = "+8801842437899";
+  const whatsappLink = `https://wa.me/${whatsappNumber.replace(/\D/g, "")}?text=Hi, I'd like to book a call with you!`;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -102,32 +125,62 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* CTA Button with glow */}
-          <div className="hidden md:block">
+          {/* Theme Toggle & CTA Button */}
+          <div className="hidden md:flex items-center gap-3">
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="relative p-2.5 rounded-xl bg-secondary/50 hover:bg-secondary border border-border/50 hover:border-primary/30 transition-all duration-300 group"
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? (
+                <Sun className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors duration-300" />
+              ) : (
+                <Moon className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors duration-300" />
+              )}
+            </button>
+
+            {/* CTA Button with WhatsApp */}
             <Button 
               variant="hero" 
               size="default" 
               className="shadow-button hover:shadow-button-hover group"
               asChild
             >
-              <a href="#contact" className="flex items-center gap-2">
+              <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" />
                 Book a Call
               </a>
             </Button>
           </div>
 
-          {/* Mobile Menu Button with animation */}
-          <button
-            className="md:hidden relative p-2 text-foreground rounded-lg hover:bg-primary/10 transition-colors duration-300"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            <div className="relative w-6 h-6">
-              <span className={`absolute left-0 top-1 w-6 h-0.5 bg-current transform transition-all duration-300 ${mobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`} />
-              <span className={`absolute left-0 top-3 w-6 h-0.5 bg-current transition-all duration-300 ${mobileMenuOpen ? 'opacity-0 scale-0' : ''}`} />
-              <span className={`absolute left-0 top-5 w-6 h-0.5 bg-current transform transition-all duration-300 ${mobileMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`} />
-            </div>
-          </button>
+          {/* Mobile: Theme Toggle & Menu Button */}
+          <div className="md:hidden flex items-center gap-2">
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="relative p-2 rounded-lg bg-secondary/50 hover:bg-secondary border border-border/50 transition-all duration-300"
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? (
+                <Sun className="w-5 h-5 text-muted-foreground" />
+              ) : (
+                <Moon className="w-5 h-5 text-muted-foreground" />
+              )}
+            </button>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="relative p-2 text-foreground rounded-lg hover:bg-primary/10 transition-colors duration-300"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              <div className="relative w-6 h-6">
+                <span className={`absolute left-0 top-1 w-6 h-0.5 bg-current transform transition-all duration-300 ${mobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`} />
+                <span className={`absolute left-0 top-3 w-6 h-0.5 bg-current transition-all duration-300 ${mobileMenuOpen ? 'opacity-0 scale-0' : ''}`} />
+                <span className={`absolute left-0 top-5 w-6 h-0.5 bg-current transform transition-all duration-300 ${mobileMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`} />
+              </div>
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu with premium animation */}
@@ -150,7 +203,7 @@ const Header = () => {
                 </a>
               ))}
               <Button variant="hero" size="lg" className="mt-4 shadow-button" asChild>
-                <a href="#contact" onClick={() => setMobileMenuOpen(false)} className="flex items-center justify-center gap-2">
+                <a href={whatsappLink} target="_blank" rel="noopener noreferrer" onClick={() => setMobileMenuOpen(false)} className="flex items-center justify-center gap-2">
                   <Sparkles className="w-4 h-4" />
                   Book a Call
                 </a>
