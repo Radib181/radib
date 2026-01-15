@@ -15,7 +15,7 @@ import SmartBackground from "@/components/SmartBackground";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-black relative">
+    <div className="min-h-screen bg-background relative transition-colors duration-500">
       {/* Global smart background animation */}
       <SmartBackground />
       

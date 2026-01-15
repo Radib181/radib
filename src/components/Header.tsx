@@ -6,19 +6,25 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("");
-  const [theme, setTheme] = useState<"dark" | "light">(() => {
-    if (typeof window !== "undefined") {
-      return (localStorage.getItem("theme") as "dark" | "light") || "dark";
-    }
-    return "dark";
-  });
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
 
+  // Initialize theme on mount
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") as "dark" | "light" | null;
+    if (savedTheme) {
+      setTheme(savedTheme);
+    }
+  }, []);
+
+  // Apply theme class to document
   useEffect(() => {
     const root = document.documentElement;
     if (theme === "light") {
       root.classList.add("light");
+      root.classList.remove("dark");
     } else {
       root.classList.remove("light");
+      root.classList.add("dark");
     }
     localStorage.setItem("theme", theme);
   }, [theme]);
@@ -82,7 +88,7 @@ const Header = () => {
                 <div className="absolute inset-0.5 rounded-[10px] bg-gradient-to-br from-primary/90 to-accent/90 opacity-80" />
                 
                 {/* Letter */}
-                <span className="relative text-lg font-black text-background drop-shadow-lg">R</span>
+                <span className="relative text-lg font-black text-white drop-shadow-lg">R</span>
                 
                 {/* Sparkle effect */}
                 <Sparkles className="absolute -top-1 -right-1 w-3 h-3 text-accent animate-pulse" />
