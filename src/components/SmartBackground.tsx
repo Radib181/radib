@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Particle {
   x: number;
@@ -27,6 +27,24 @@ const SmartBackground = () => {
   const particlesRef = useRef<Particle[]>([]);
   const starsRef = useRef<Star[]>([]);
   const animationRef = useRef<number>();
+  const [isLightMode, setIsLightMode] = useState(false);
+
+  // Watch for theme changes
+  useEffect(() => {
+    const checkTheme = () => {
+      setIsLightMode(document.documentElement.classList.contains("light"));
+    };
+    
+    checkTheme();
+    
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    
+    return () => observer.disconnect();
+  }, [isLightMode]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -257,12 +275,17 @@ const SmartBackground = () => {
     };
   }, []);
 
+  // Don't render canvas in light mode - just use CSS background
+  if (isLightMode) {
+    return null;
+  }
+
   return (
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none z-0"
       style={{ 
-        background: "#000000"
+        background: "#000000",
       }}
     />
   );

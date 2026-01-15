@@ -52,7 +52,7 @@ const TechCard = ({ tech, index }: { tech: Technology; index: number }) => {
   
   return (
     <div className="flex-shrink-0 mx-3 sm:mx-4">
-      <div className="group relative p-5 sm:p-6 rounded-2xl bg-[#0A0A0B] border border-white/10 hover:border-white/25 transition-all duration-400 hover:-translate-y-2 text-center w-[140px] sm:w-[160px] overflow-hidden">
+      <div className="group relative p-5 sm:p-6 rounded-2xl bg-card border border-border/50 hover:border-border transition-all duration-400 hover:-translate-y-2 text-center w-[140px] sm:w-[160px] overflow-hidden">
         {/* Subtle gradient on hover */}
         <div 
           className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-10 transition-opacity duration-400"
@@ -82,12 +82,12 @@ const TechCard = ({ tech, index }: { tech: Technology; index: number }) => {
         </div>
 
         {/* Name */}
-        <p className="relative font-semibold text-sm sm:text-base text-white/90 group-hover:text-white transition-colors duration-300">
+        <p className="relative font-semibold text-sm sm:text-base text-foreground/90 group-hover:text-foreground transition-colors duration-300">
           {tech.name}
         </p>
 
         {/* Category */}
-        <p className="relative text-xs text-white/40 mt-1.5 group-hover:text-white/60 transition-colors duration-300">
+        <p className="relative text-xs text-muted-foreground mt-1.5 group-hover:text-foreground/60 transition-colors duration-300">
           {tech.category}
         </p>
       </div>
@@ -100,26 +100,26 @@ const TechStackSection = () => {
   const duplicatedTech2 = [...technologiesRow2, ...technologiesRow2, ...technologiesRow2];
 
   return (
-    <section className="py-24 sm:py-32 relative overflow-hidden bg-[#030304]">
+    <section className="py-24 sm:py-32 relative overflow-hidden bg-secondary/30">
       {/* Subtle background gradient */}
       <div className="absolute inset-0">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px] bg-white/[0.02] rounded-full blur-[120px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px] bg-primary/[0.02] rounded-full blur-[120px]" />
       </div>
       
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <div className="max-w-5xl mx-auto">
           {/* Section Header - Clean & Minimal */}
           <div className="text-center mb-16 sm:mb-20">
-            <p className="text-white/40 font-medium text-sm uppercase tracking-[0.2em] mb-4">
+            <p className="text-muted-foreground font-medium text-sm uppercase tracking-[0.2em] mb-4">
               Technology Stack
             </p>
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-5">
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-5">
               Powered By{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white/80 to-white/60">
+              <span className="text-gradient">
                 Modern Tech
               </span>
             </h2>
-            <p className="text-white/50 text-lg sm:text-xl max-w-2xl mx-auto">
+            <p className="text-muted-foreground text-lg sm:text-xl max-w-2xl mx-auto">
               Expert-level proficiency with industry-leading tools
             </p>
           </div>
@@ -130,8 +130,8 @@ const TechStackSection = () => {
       <div className="space-y-6 sm:space-y-8">
         {/* Row 1 - Left to Right */}
         <div className="relative w-full overflow-hidden py-2">
-          <div className="absolute left-0 top-0 bottom-0 w-24 sm:w-40 bg-gradient-to-r from-[#030304] via-[#030304]/80 to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-24 sm:w-40 bg-gradient-to-l from-[#030304] via-[#030304]/80 to-transparent z-10 pointer-events-none" />
+          <div className="absolute left-0 top-0 bottom-0 w-24 sm:w-40 bg-gradient-to-r from-background via-background/80 to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-24 sm:w-40 bg-gradient-to-l from-background via-background/80 to-transparent z-10 pointer-events-none" />
 
           <div className="flex animate-marquee hover:pause-animation">
             {duplicatedTech1.map((tech, index) => (
@@ -142,8 +142,8 @@ const TechStackSection = () => {
 
         {/* Row 2 - Right to Left */}
         <div className="relative w-full overflow-hidden py-2">
-          <div className="absolute left-0 top-0 bottom-0 w-24 sm:w-40 bg-gradient-to-r from-[#030304] via-[#030304]/80 to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-24 sm:w-40 bg-gradient-to-l from-[#030304] via-[#030304]/80 to-transparent z-10 pointer-events-none" />
+          <div className="absolute left-0 top-0 bottom-0 w-24 sm:w-40 bg-gradient-to-r from-background via-background/80 to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-24 sm:w-40 bg-gradient-to-l from-background via-background/80 to-transparent z-10 pointer-events-none" />
 
           <div className="flex animate-marquee-reverse hover:pause-animation">
             {duplicatedTech2.map((tech, index) => (
@@ -156,8 +156,8 @@ const TechStackSection = () => {
       {/* Bottom text */}
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <div className="text-center mt-14 sm:mt-18">
-          <p className="text-white/40 text-sm sm:text-base">
-            <span className="text-white/70 font-semibold">50+</span> more tools and APIs
+          <p className="text-muted-foreground text-sm sm:text-base">
+            <span className="text-foreground/70 font-semibold">50+</span> more tools and APIs
           </p>
         </div>
       </div>

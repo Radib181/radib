@@ -59,7 +59,7 @@ const HeroSection = () => {
             <Button
               variant="outline"
               size="lg"
-              className="h-12 px-7 text-base font-semibold border-border/50 bg-white/5 backdrop-blur-sm hover:bg-white/10 hover:border-primary/50 transition-all duration-300"
+              className="h-12 px-7 text-base font-semibold border-border/50 bg-secondary/50 backdrop-blur-sm hover:bg-secondary hover:border-primary/50 transition-all duration-300"
               onClick={scrollToProjects}
             >
               View Case Studies
