@@ -4,6 +4,7 @@ import emailScraper from "@/assets/projects/email-scraper.jpg";
 import smartOutreachAi from "@/assets/projects/smart-outreach-ai.png";
 import studentInfoAutomation from "@/assets/projects/student-info-automation.png";
 import ragDocsChatbot from "@/assets/projects/rag-docs-chatbot.png";
+import whatsappBookingAssistant from "@/assets/projects/whatsapp-booking-assistant.png";
 
 export interface Project {
   id: string;
@@ -20,6 +21,26 @@ export interface Project {
 }
 
 export const projects: Project[] = [
+  {
+    id: "whatsapp-booking-assistant",
+    title: "AI-Powered WhatsApp Booking Assistant",
+    shortDescription: "Manage appointments with ease — book, reschedule, cancel, and collect payments via WhatsApp",
+    thumbnail: whatsappBookingAssistant,
+    badge: "New",
+    problem: "Managing appointments manually is chaotic. Businesses struggle with missed bookings, rescheduling requests, cancellations, and payment collection. Customers expect instant responses but staff can't be available 24/7.",
+    solution: "Built a smart AI assistant that handles all appointment operations directly through WhatsApp. Customers can book, reschedule, cancel appointments, and make online payments via Stripe—all through natural conversation with the AI bot.",
+    tools: ["n8n", "WhatsApp API", "Google Gemini AI", "Google Sheets", "Stripe", "AI Agent"],
+    automationFlow: "WhatsApp Message → AI Agent Processing → Intent Detection (Book/Reschedule/Cancel/Pay) → Google Sheets Database → Stripe Payment Link → Confirmation Message → Appointment Reminder",
+    impact: "24/7 automated appointment management. Zero missed bookings. Seamless payment collection. Customers can self-serve anytime. Staff freed from repetitive scheduling tasks.",
+    features: [
+      "Appointment bookings via WhatsApp",
+      "Easy rescheduling and cancellations",
+      "Online payments via Stripe",
+      "AI-powered natural conversation",
+      "Google Sheets as database",
+      "Automated reminders and confirmations"
+    ]
+  },
   {
     id: "smart-outreach-ai",
     title: "Smart Outreach AI – Personalized DM Automation",
