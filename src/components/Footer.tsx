@@ -1,4 +1,4 @@
-import { Linkedin, Facebook, Mail, ArrowUpRight, Phone } from "lucide-react";
+import { Linkedin, Facebook, Mail, ArrowUpRight, Phone, Github } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -13,6 +13,11 @@ const Footer = () => {
       name: "Facebook",
       icon: Facebook,
       href: "https://www.facebook.com/profile.php?id=61583476357004",
+    },
+    {
+      name: "GitHub",
+      icon: Github,
+      href: "https://github.com/Radib181",
     },
     {
       name: "Email",
