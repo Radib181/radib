@@ -52,8 +52,11 @@ const AboutSection = () => {
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
                 Hi, I'm <span className="text-gradient">Radib</span>
               </h2>
-              <p className="text-xl text-foreground/90 mb-4">
+              <p className="text-xl text-foreground/90 mb-2">
                 AI Automation Expert & Vibe Coder
+              </p>
+              <p className="text-base text-muted-foreground mb-4">
+                Senior Developer at <span className="text-primary font-medium">Business Accelerator AI</span>
               </p>
               <div className="space-y-4 text-muted-foreground text-lg leading-relaxed">
                 <p>
