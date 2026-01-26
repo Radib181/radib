@@ -1,13 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Sparkles, Sun, Moon, Linkedin, Facebook, Github, Instagram } from "lucide-react";
+import { Sparkles, Sun, Moon } from "lucide-react";
 import { useState, useEffect } from "react";
-
-const socialLinks = [
-  { name: "LinkedIn", icon: Linkedin, href: "https://www.linkedin.com/in/radib-bhuyian-428290386/" },
-  { name: "Facebook", icon: Facebook, href: "https://www.facebook.com/profile.php?id=61583476357004" },
-  { name: "GitHub", icon: Github, href: "https://github.com/Radib181" },
-  { name: "Instagram", icon: Instagram, href: "https://www.instagram.com/radibbhuyian/" },
-];
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -138,23 +131,8 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* Social Links, Theme Toggle & CTA Button */}
+          {/* Theme Toggle & CTA Button */}
           <div className="hidden md:flex items-center gap-3">
-            {/* Social Icons */}
-            <div className="flex items-center gap-1 mr-2">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.name}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-300"
-                  aria-label={social.name}
-                >
-                  <social.icon className="w-4 h-4" />
-                </a>
-              ))}
-            </div>
 
             {/* Theme Toggle */}
             <button
