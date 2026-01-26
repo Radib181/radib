@@ -2,6 +2,7 @@ import newsletterAgent from "@/assets/projects/newsletter-agent.png";
 import messengerAgent from "@/assets/projects/messenger-agent.jpg";
 import emailScraper from "@/assets/projects/email-scraper.jpg";
 import smartOutreachAi from "@/assets/projects/smart-outreach-ai.png";
+import socialMediaAutomation from "@/assets/projects/social-media-automation.png";
 
 import ragDocsChatbot from "@/assets/projects/rag-docs-chatbot.png";
 import whatsappBookingAssistant from "@/assets/projects/whatsapp-booking-assistant.png";
@@ -21,6 +22,27 @@ export interface Project {
 }
 
 export const projects: Project[] = [
+  {
+    id: "social-media-automation",
+    title: "AI-Powered Multi-Platform Social Media Automation",
+    shortDescription: "Produce and manage content across 7+ platforms with smart AI automation",
+    thumbnail: socialMediaAutomation,
+    badge: "New",
+    problem: "Managing different content formats for different platforms is time-consuming and repetitive. Social media managers spend hours on manual work creating tailored posts for X (Twitter), Instagram, LinkedIn, Facebook, TikTok, Threads, and YouTube Shorts.",
+    solution: "Built a complete automation workflow that maintains consistent branding while creating platform-specific content at scale. Features AI content creation with tailored posts, auto hashtags, CTAs, emojis, and AI-generated visuals. Includes a human approval system via Gmail and one-click multi-platform publishing.",
+    tools: ["n8n", "OpenAI GPT-4", "Google Gemini", "SerpAPI", "Gmail API", "Instagram Graph API", "Facebook Graph API", "Twitter/X API", "LinkedIn API"],
+    automationFlow: "Content Input → AI Content Generation → SERP Research → Platform-Specific Formatting → Email Preview for Approval → Double-Approval Process → Multi-Platform Publishing (Instagram, Facebook, X, LinkedIn)",
+    impact: "Cuts manual effort by up to 80%. Enables consistent branding across 7+ platforms. Streamlines content approval with email-based review system. One-click publishing to all major social platforms.",
+    features: [
+      "AI-generated tailored posts for each platform",
+      "Auto hashtags, CTAs, and emojis",
+      "AI image generation and visual suggestions",
+      "SERP-based content research",
+      "Email preview for human approval",
+      "Double-approval process before publishing",
+      "One-click multi-platform publishing"
+    ]
+  },
   {
     id: "whatsapp-booking-assistant",
     title: "AI-Powered WhatsApp Booking Assistant",
