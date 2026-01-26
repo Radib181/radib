@@ -1,4 +1,4 @@
-import { Linkedin, Facebook, Mail, ArrowUpRight, Phone, Github } from "lucide-react";
+import { Linkedin, Facebook, Mail, ArrowUpRight, Github, Instagram } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -18,6 +18,11 @@ const Footer = () => {
       name: "GitHub",
       icon: Github,
       href: "https://github.com/Radib181",
+    },
+    {
+      name: "Instagram",
+      icon: Instagram,
+      href: "https://www.instagram.com/radibbhuyian/",
     },
     {
       name: "Email",
