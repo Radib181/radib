@@ -1,9 +1,9 @@
+import aiVideoGenerationAgent from "@/assets/projects/ai-video-generation-agent.png";
 import newsletterAgent from "@/assets/projects/newsletter-agent.png";
 import messengerAgent from "@/assets/projects/messenger-agent.jpg";
 import emailScraper from "@/assets/projects/email-scraper.jpg";
 import smartOutreachAi from "@/assets/projects/smart-outreach-ai.png";
 import socialMediaAutomation from "@/assets/projects/social-media-automation.png";
-
 import ragDocsChatbot from "@/assets/projects/rag-docs-chatbot.png";
 import whatsappBookingAssistant from "@/assets/projects/whatsapp-booking-assistant.png";
 
@@ -22,6 +22,26 @@ export interface Project {
 }
 
 export const projects: Project[] = [
+  {
+    id: "ai-video-generation-agent",
+    title: "Fully Automated AI Video Generation Agent",
+    shortDescription: "End-to-end AI automation that handles entire video creation process without manual intervention",
+    thumbnail: aiVideoGenerationAgent,
+    badge: "New",
+    problem: "Video content creation is time-consuming and requires significant manual effort. Teams spend hours generating prompts, creating clips, combining videos, and organizing outputs. Scaling video production for marketing, social media, or internal workflows becomes a bottleneck.",
+    solution: "Built an end-to-end AI automation agent that handles the entire video creation process automatically. The system reads predefined prompts from Google Sheets, sends them via HTTP requests to fal.ai for AI video generation, automatically processes and combines multiple clips into a single final video, and tracks everything back in Google Sheets.",
+    tools: ["n8n", "fal.ai", "Google Sheets", "HTTP Requests", "Video Processing"],
+    automationFlow: "Google Sheets Prompts → HTTP Request to fal.ai → Video Generation → Video Processing → Combine Clips → Final Rendering → Save & Track in Google Sheets",
+    impact: "Dramatically reduces content creation time. Improves consistency across video outputs. Enables scaling video production with zero manual work after setup. Perfect for marketing, social media, and internal workflows.",
+    features: [
+      "Fully automated video generation pipeline",
+      "Google Sheets-driven prompt system",
+      "fal.ai integration via HTTP requests",
+      "Automatic video combining and rendering",
+      "Zero manual work after setup",
+      "Organized tracking in Google Sheets"
+    ]
+  },
   {
     id: "social-media-automation",
     title: "AI-Powered Multi-Platform Social Media Automation",
