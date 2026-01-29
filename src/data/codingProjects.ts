@@ -1,3 +1,6 @@
+import photographyStudio from "@/assets/projects/photography-studio.png";
+import realestateDashboard from "@/assets/projects/realestate-dashboard.png";
+
 export interface CodingProject {
   id: string;
   title: string;
@@ -11,36 +14,30 @@ export interface CodingProject {
 
 export const codingProjects: CodingProject[] = [
   {
-    id: "portfolio-website",
-    title: "AI Automation Portfolio",
-    shortDescription: "Modern portfolio website built with React, TypeScript, and Tailwind CSS featuring 3D animations",
-    thumbnail: "/placeholder.svg",
-    techStack: ["React", "TypeScript", "Tailwind CSS", "Framer Motion", "Three.js"],
-    liveUrl: "https://radib.lovable.app",
+    id: "photography-studio",
+    title: "Smart Photography Studio",
+    shortDescription: "Professional photography booking platform with elegant UI, service packages, and portfolio showcase",
+    thumbnail: photographyStudio,
+    techStack: ["React", "TypeScript", "Tailwind CSS", "Framer Motion"],
+    liveUrl: "https://photography-studio.lovable.app",
     badge: "Live"
   },
   {
-    id: "saas-dashboard",
-    title: "SaaS Analytics Dashboard",
-    shortDescription: "Real-time analytics dashboard with charts, data visualization, and dark mode support",
-    thumbnail: "/placeholder.svg",
-    techStack: ["React", "Recharts", "Supabase", "Tailwind CSS"],
-    badge: "Vibe Coded"
+    id: "realestate-dashboard",
+    title: "RealVista Dashboard",
+    shortDescription: "Real estate analytics dashboard with property tracking, market trends, and team performance metrics",
+    thumbnail: realestateDashboard,
+    techStack: ["React", "TypeScript", "Recharts", "Tailwind CSS"],
+    liveUrl: "https://realestae222.lovable.app",
+    badge: "Live"
   },
   {
-    id: "ai-chat-interface",
-    title: "AI Chat Interface",
-    shortDescription: "Modern chat UI with streaming responses, markdown support, and conversation history",
+    id: "disasters-io",
+    title: "Disasters I/O",
+    shortDescription: "Real-time disaster monitoring and reporting platform with interactive maps and alerts",
     thumbnail: "/placeholder.svg",
-    techStack: ["React", "OpenAI API", "TypeScript", "Tailwind CSS"],
-    badge: "Vibe Coded"
-  },
-  {
-    id: "task-automation-tool",
-    title: "Task Automation Tool",
-    shortDescription: "Web app for managing and automating repetitive tasks with visual workflow builder",
-    thumbnail: "/placeholder.svg",
-    techStack: ["React", "Node.js", "PostgreSQL", "Tailwind CSS"],
-    badge: "In Progress"
+    techStack: ["React", "TypeScript", "Maps API", "Vercel"],
+    liveUrl: "https://disasters-i-o.vercel.app/",
+    badge: "Live"
   }
 ];
